@@ -21,6 +21,7 @@ export default function RootLayout() {
     'IBMPlexSansArabic-Medium': require('../assets/fonts/IBMPlexSansArabic-Medium.ttf'),
     'IBMPlexSansArabic-SemiBold': require('../assets/fonts/IBMPlexSansArabic-SemiBold.ttf'),
     'IBMPlexSansArabic-Bold': require('../assets/fonts/IBMPlexSansArabic-Bold.ttf'),
+    'MaterialSymbols-Rounded': require('../assets/fonts/material-symbols-rounded-latin-400-normal.ttf'),
   });
 
   useEffect(() => {

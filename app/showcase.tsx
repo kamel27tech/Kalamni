@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Button from '@/components/atoms/Button';
+import { Icon, IconName } from '@/components/atoms/Icon';
+import HeaderActivity from '@/components/molecules/HeaderActivity';
 import ProgressBar from '@/components/atoms/ProgressBar';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
@@ -276,6 +278,21 @@ const swatch = StyleSheet.create({
   },
 });
 
+// ─── Icon section ─────────────────────────────────────────────────────────────
+
+const ICON_SAMPLES: { name: IconName }[] = [
+  { name: 'close' },
+  { name: 'arrow_forward' },
+  { name: 'arrow_back' },
+  { name: 'check' },
+  { name: 'check_circle' },
+  { name: 'volume_up' },
+  { name: 'play_arrow' },
+  { name: 'settings' },
+  { name: 'person' },
+  { name: 'home' },
+];
+
 // ─── Button section ───────────────────────────────────────────────────────────
 
 const whiteArrowL = <Ionicons name="arrow-back"    size={20} color={Colors.text.negative} />;
@@ -505,6 +522,81 @@ export default function ShowcaseScreen() {
         <GroupLabel label="Animated (tap to increment)" />
         <AnimatedProgressDemo />
 
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* ICONS                                                             */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Icons" />
+
+        <GroupLabel label="Common icons · default color · 28px" />
+        <View style={icons.grid}>
+          {ICON_SAMPLES.map(({ name }) => (
+            <View key={name} style={icons.cell}>
+              <Icon name={name} size={28} />
+              <Text style={icons.label}>{name}</Text>
+            </View>
+          ))}
+        </View>
+
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* HEADER ACTIVITY                                                   */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Header Activity" />
+
+        <GroupLabel label="1 · Default — progress 25%, step 2/40, translate" />
+        <View style={ha.card}>
+          <HeaderActivity
+            progress={0.25}
+            currentStep={2}
+            totalSteps={40}
+            onClose={() => console.log('close pressed')}
+          />
+        </View>
+
+        <GroupLabel label="2 · Without stepper — showStepper false, progress 50%" />
+        <View style={ha.card}>
+          <HeaderActivity
+            progress={0.5}
+            showStepper={false}
+            onClose={() => console.log('close pressed')}
+          />
+        </View>
+
+        <GroupLabel label="3 · Different icon — flag, progress 75%" />
+        <View style={ha.card}>
+          <HeaderActivity
+            progress={0.75}
+            currentStep={30}
+            totalSteps={40}
+            rightIconName="flag"
+            onClose={() => console.log('close pressed')}
+          />
+        </View>
+
+        <GroupLabel label="4 · Interactive — both handlers active, progress 10%" />
+        <View style={ha.card}>
+          <HeaderActivity
+            progress={0.1}
+            currentStep={1}
+            totalSteps={40}
+            onClose={() => console.log('close pressed')}
+            onRightIconPress={() => console.log('right icon pressed')}
+          />
+        </View>
+
+        <GroupLabel label="5 · Near complete — progress 95%, step 38/40" />
+        <View style={ha.card}>
+          <HeaderActivity
+            progress={0.95}
+            currentStep={38}
+            totalSteps={40}
+            onClose={() => console.log('close pressed')}
+          />
+        </View>
+
         <View style={screen.bottomPad} />
       </ScrollView>
     </SafeAreaView>
@@ -553,6 +645,38 @@ const colorSection = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+  },
+});
+
+const ha = StyleSheet.create({
+  card: {
+    backgroundColor: Colors.surface.subtle,
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+  },
+});
+
+const icons = StyleSheet.create({
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+    marginBottom: 24,
+  },
+  cell: {
+    width: 72,
+    alignItems: 'center',
+    gap: 6,
+  },
+  label: {
+    ...Typography.english.body.m,
+    color: Colors.text.caption,
+    fontSize: 10,
+    textAlign: 'center',
   },
 });
 
