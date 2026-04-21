@@ -1,0 +1,196 @@
+{
+  "id": "arabic-course",
+  "language": "arabic",
+  "dialect": "msa",
+  "version": "1.0.0",
+  "levels": [
+    {
+      "id": "level-beginner",
+      "order": 1,
+      "code": "L1",
+      "title": { "en": "Beginner", "ar": "مبتدئ" },
+      "description": {
+        "en": "Start from zero — learn the essentials",
+        "ar": "ابدأ من الصفر — تعلم الأساسيات"
+      },
+      "icon": "🌱",
+      "color": "#22bb33",
+      "topics": [
+        {
+          "id": "topic-greetings",
+          "order": 1,
+          "title": { "en": "Greetings", "ar": "التحيات" },
+          "description": {
+            "en": "Say hello, goodbye, and introduce yourself",
+            "ar": "قل مرحبا ووداعا وعرّف عن نفسك"
+          },
+          "icon": "👋",
+          "requiresPrevious": false,
+          "units": [
+            {
+              "id": "unit-hello-goodbye",
+              "order": 1,
+              "title": { "en": "Hello & Goodbye", "ar": "مرحبا ووداعا" },
+              "icon": "👋",
+              "requiresPrevious": false,
+              "lessons": []
+            },
+            {
+              "id": "unit-introductions",
+              "order": 2,
+              "title": { "en": "Introductions", "ar": "التعارف" },
+              "icon": "🤝",
+              "requiresPrevious": true,
+              "lessons": []
+            },
+            {
+              "id": "unit-polite-phrases",
+              "order": 3,
+              "title": { "en": "Polite Phrases", "ar": "عبارات المجاملة" },
+              "icon": "🙏",
+              "requiresPrevious": true,
+              "lessons": []
+            }
+          ]
+        },
+        {
+          "id": "topic-numbers",
+          "order": 2,
+          "title": { "en": "Numbers", "ar": "الأرقام" },
+          "description": {
+            "en": "Count from 1 to 100 and beyond",
+            "ar": "عدّ من 1 إلى 100 وأكثر"
+          },
+          "icon": "🔢",
+          "requiresPrevious": true,
+          "units": [
+            {
+              "id": "unit-numbers-1-10",
+              "order": 1,
+              "title": { "en": "1 to 10", "ar": "من 1 إلى 10" },
+              "icon": "1️⃣",
+              "requiresPrevious": false,
+              "lessons": []
+            },
+            {
+              "id": "unit-numbers-11-20",
+              "order": 2,
+              "title": { "en": "11 to 20", "ar": "من 11 إلى 20" },
+              "icon": "🔟",
+              "requiresPrevious": true,
+              "lessons": []
+            },
+            {
+              "id": "unit-numbers-larger",
+              "order": 3,
+              "title": { "en": "Larger Numbers", "ar": "الأرقام الكبيرة" },
+              "icon": "💯",
+              "requiresPrevious": true,
+              "lessons": []
+            }
+          ]
+        },
+        {
+          "id": "topic-family",
+          "order": 3,
+          "title": { "en": "Family", "ar": "العائلة" },
+          "description": {
+            "en": "Talk about your family members",
+            "ar": "تحدث عن أفراد عائلتك"
+          },
+          "icon": "👨‍👩‍👧‍👦",
+          "requiresPrevious": true,
+          "units": [
+            {
+              "id": "unit-immediate-family",
+              "order": 1,
+              "title": { "en": "Immediate Family", "ar": "العائلة المباشرة" },
+              "icon": "👨‍👩‍👧",
+              "requiresPrevious": false,
+              "lessons": []
+            },
+            {
+              "id": "unit-extended-family",
+              "order": 2,
+              "title": { "en": "Extended Family", "ar": "العائلة الممتدة" },
+              "icon": "👵",
+              "requiresPrevious": true,
+              "lessons": []
+            },
+            {
+              "id": "unit-family-descriptions",
+              "order": 3,
+              "title": { "en": "Describing Family", "ar": "وصف العائلة" },
+              "icon": "💬",
+              "requiresPrevious": true,
+              "lessons": []
+            }
+          ]
+        },
+        {
+          "id": "topic-food",
+          "order": 4,
+          "title": { "en": "Food", "ar": "الطعام" },
+          "description": {
+            "en": "Order food and talk about meals",
+            "ar": "اطلب الطعام وتحدث عن الوجبات"
+          },
+          "icon": "🍽️",
+          "requiresPrevious": true,
+          "units": [
+            {
+              "id": "unit-common-foods",
+              "order": 1,
+              "title": { "en": "Common Foods", "ar": "الأطعمة الشائعة" },
+              "icon": "🥖",
+              "requiresPrevious": false,
+              "lessons": []
+            },
+            {
+              "id": "unit-restaurant",
+              "order": 2,
+              "title": { "en": "At the Restaurant", "ar": "في المطعم" },
+              "icon": "🍴",
+              "requiresPrevious": true,
+              "lessons": []
+            },
+            {
+              "id": "unit-drinks",
+              "order": 3,
+              "title": { "en": "Drinks", "ar": "المشروبات" },
+              "icon": "☕",
+              "requiresPrevious": true,
+              "lessons": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "level-intermediate",
+      "order": 2,
+      "code": "L2",
+      "title": { "en": "Intermediate", "ar": "متوسط" },
+      "description": {
+        "en": "Build fluency with real conversations",
+        "ar": "اكتسب الطلاقة من خلال محادثات حقيقية"
+      },
+      "icon": "🌿",
+      "color": "#0d6786",
+      "topics": []
+    },
+    {
+      "id": "level-advanced",
+      "order": 3,
+      "code": "L3",
+      "title": { "en": "Advanced", "ar": "متقدم" },
+      "description": {
+        "en": "Refine your skills to near-native level",
+        "ar": "حسّن مهاراتك لمستوى قريب من اللغة الأم"
+      },
+      "icon": "🌳",
+      "color": "#e74c39",
+      "topics": []
+    }
+  ]
+}
