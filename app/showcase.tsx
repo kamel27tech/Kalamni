@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   Text,
   View,
   StyleSheet,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Button from '@/components/atoms/Button';
+import ProgressBar from '@/components/atoms/ProgressBar';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
 
@@ -283,6 +285,64 @@ const darkArrowR  = <Ionicons name="arrow-forward" size={20} color={Colors.icon.
 const dimArrowL   = <Ionicons name="arrow-back"    size={20} color={Colors.text.disabled} />;
 const dimArrowR   = <Ionicons name="arrow-forward" size={20} color={Colors.text.disabled} />;
 
+// ─── Progress Bar section ─────────────────────────────────────────────────────
+
+const STATIC_SAMPLES: { progress: number; label: string }[] = [
+  { progress: 0,    label: '0' },
+  { progress: 0.25, label: '0.25' },
+  { progress: 0.5,  label: '0.5' },
+  { progress: 0.75, label: '0.75' },
+  { progress: 1.0,  label: '1.0' },
+];
+
+function AnimatedProgressDemo() {
+  const [value, setValue] = useState(0);
+
+  function increment() {
+    setValue((prev) => Math.min(1, parseFloat((prev + 0.2).toFixed(2))));
+  }
+
+  return (
+    <View style={pb.demoCard}>
+      <ProgressBar progress={value} style={{ marginBottom: 8 }} />
+      <Text style={pb.demoValue}>{(value * 100).toFixed(0)}%</Text>
+      <TouchableOpacity onPress={increment} style={pb.demoButton}>
+        <Text style={pb.demoButtonLabel}>+0.2</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const pb = StyleSheet.create({
+  row: {
+    marginBottom: 16,
+  },
+  caption: {
+    ...Typography.english.body.m,
+    color: Colors.text.caption,
+    fontSize: 11,
+    marginTop: 6,
+  },
+  demoCard: {
+    gap: 12,
+  },
+  demoValue: {
+    ...Typography.english.title.s,
+    color: Colors.text.body,
+  },
+  demoButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: Colors.primary.surface,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  demoButtonLabel: {
+    ...Typography.english.title.s,
+    color: Colors.text.negative,
+  },
+});
+
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export default function ShowcaseScreen() {
@@ -426,6 +486,24 @@ export default function ShowcaseScreen() {
             <Button label="Button" variant="wrong"     size="L" disabled leftIcon={dimArrowL} rightIcon={dimArrowR} style={btn.fill} />
           </View>
         </View>
+
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* PROGRESS BAR                                                      */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Progress Bar" />
+
+        <GroupLabel label="Static values" />
+        {STATIC_SAMPLES.map(({ progress, label }) => (
+          <View key={label} style={pb.row}>
+            <ProgressBar progress={progress} animated={false} />
+            <Text style={pb.caption}>{label}</Text>
+          </View>
+        ))}
+
+        <GroupLabel label="Animated (tap to increment)" />
+        <AnimatedProgressDemo />
 
         <View style={screen.bottomPad} />
       </ScrollView>

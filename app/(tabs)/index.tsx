@@ -1,5 +1,54 @@
-import { Redirect } from 'expo-router';
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import Button from '../../components/atoms/Button';
+import { Spacing } from '../../constants/spacing';
+import { Colors } from '../../constants/colors';
+import { Typography } from '../../constants/typography';
 
-export default function HomeScreen() {
-  return <Redirect href="/content-test" />;
+export default function DevMenu() {
+  const router = useRouter();
+
+  return (
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Kalimni — Dev Menu</Text>
+        <View style={styles.buttons}>
+          <Button
+            label="Design System Showcase"
+            variant="primary"
+            onPress={() => router.push('/showcase')}
+          />
+          <Button
+            label="Content Test Screen"
+            variant="primary"
+            onPress={() => router.push('/content-test')}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
 }
+
+const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: Colors.surface.subtle,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.lg,
+    gap: Spacing.xl,
+  },
+  title: {
+    ...Typography.english.title.l,
+    color: Colors.text.title,
+    textAlign: 'center',
+  },
+  buttons: {
+    width: '100%',
+    gap: Spacing.md,
+  },
+});
