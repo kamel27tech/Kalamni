@@ -5,6 +5,19 @@ import Button from '../../components/atoms/Button';
 import { Spacing } from '../../constants/spacing';
 import { Colors } from '../../constants/colors';
 import { Typography } from '../../constants/typography';
+import { getAllLevels } from '../../lib/content';
+
+function getFirstLessonId(): string {
+  for (const level of getAllLevels()) {
+    for (const topic of level.topics) {
+      for (const unit of topic.units) {
+        if (unit.lessons.length > 0) return unit.lessons[0].id;
+      }
+    }
+  }
+  console.warn('[DevMenu] No lessons found in course data — navigating to test ID for "not found" state.');
+  return 'lesson-test-001';
+}
 
 export default function DevMenu() {
   const router = useRouter();
@@ -23,6 +36,11 @@ export default function DevMenu() {
             label="Content Test Screen"
             variant="primary"
             onPress={() => router.push('/content-test')}
+          />
+          <Button
+            label="Test Lesson Player"
+            variant="primary"
+            onPress={() => router.push(`/lesson/${getFirstLessonId()}`)}
           />
         </View>
       </View>

@@ -1,0 +1,128 @@
+{
+  "id": "lesson-basic-hellos",
+  "order": 1,
+  "title": { "en": "Basic Hellos", "ar": "التحيات الأساسية" },
+  "estimatedMinutes": 5,
+  "requiresPrevious": false,
+  "exercises": [
+    {
+      "id": "ex-001",
+      "type": "multiple-choice",
+      "order": 1,
+      "data": {
+        "prompt": "How do you say 'Hello'?",
+        "correctAnswer": "مرحبا",
+        "options": [
+          { "text": "مرحبا", "transliteration": "marhaba" },
+          { "text": "شكرا", "transliteration": "shukran" },
+          { "text": "وداعا", "transliteration": "wadaan" },
+          { "text": "نعم", "transliteration": "naam" }
+        ]
+      }
+    },
+    {
+      "id": "ex-002",
+      "type": "multiple-choice",
+      "order": 2,
+      "data": {
+        "prompt": "What does 'أهلا' mean?",
+        "correctAnswer": "Hi",
+        "options": [
+          { "text": "Hi" },
+          { "text": "Thank you" },
+          { "text": "Sorry" },
+          { "text": "Yes" }
+        ]
+      }
+    },
+    {
+      "id": "ex-003",
+      "type": "multiple-choice",
+      "order": 3,
+      "data": {
+        "prompt": "Which means 'Goodbye'?",
+        "correctAnswer": "وداعا",
+        "options": [
+          { "text": "مرحبا", "transliteration": "marhaba" },
+          { "text": "وداعا", "transliteration": "wadaan" },
+          { "text": "أهلا", "transliteration": "ahlan" },
+          { "text": "نعم", "transliteration": "naam" }
+        ]
+      }
+    },
+    {
+      "id": "ex-004",
+      "type": "multiple-choice",
+      "order": 4,
+      "data": {
+        "prompt": "How do you say 'Peace be upon you'?",
+        "correctAnswer": "السلام عليكم",
+        "options": [
+          { "text": "السلام عليكم", "transliteration": "as-salamu alaykum" },
+          { "text": "مع السلامة", "transliteration": "ma'a as-salama" },
+          { "text": "صباح الخير", "transliteration": "sabah al-khair" },
+          { "text": "تصبح على خير", "transliteration": "tusbih 'ala khair" }
+        ]
+      }
+    },
+    {
+      "id": "ex-005",
+      "type": "multiple-choice",
+      "order": 5,
+      "data": {
+        "prompt": "What does 'مع السلامة' mean?",
+        "correctAnswer": "Goodbye (with peace)",
+        "options": [
+          { "text": "Goodbye (with peace)" },
+          { "text": "Good morning" },
+          { "text": "Thank you" },
+          { "text": "Please" }
+        ]
+      }
+    },
+    {
+      "id": "ex-006",
+      "type": "matching-pairs",
+      "order": 6,
+      "data": {
+        "prompt": "Match the Arabic greetings to their meanings",
+        "pairs": [
+          { "left": "مرحبا", "right": "Hello" },
+          { "left": "أهلا", "right": "Hi" },
+          { "left": "وداعا", "right": "Goodbye" },
+          { "left": "مع السلامة", "right": "Go with peace" }
+        ]
+      }
+    },
+    {
+      "id": "ex-007",
+      "type": "multiple-choice",
+      "order": 7,
+      "data": {
+        "prompt": "Which is the formal way to greet someone?",
+        "correctAnswer": "السلام عليكم",
+        "options": [
+          { "text": "أهلا", "transliteration": "ahlan" },
+          { "text": "مرحبا", "transliteration": "marhaba" },
+          { "text": "السلام عليكم", "transliteration": "as-salamu alaykum" },
+          { "text": "هاي", "transliteration": "hai" }
+        ]
+      }
+    },
+    {
+      "id": "ex-008",
+      "type": "multiple-choice",
+      "order": 8,
+      "data": {
+        "prompt": "How do you say 'Hi' in Arabic?",
+        "correctAnswer": "أهلا",
+        "options": [
+          { "text": "أهلا", "transliteration": "ahlan" },
+          { "text": "وداعا", "transliteration": "wadaan" },
+          { "text": "شكرا", "transliteration": "shukran" },
+          { "text": "نعم", "transliteration": "naam" }
+        ]
+      }
+    }
+  ]
+}

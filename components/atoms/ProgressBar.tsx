@@ -44,7 +44,7 @@ export default function ProgressBar({
       style={[
         {
           height,
-          borderRadius: 40,
+          borderRadius: Math.round(height / 2),
           backgroundColor: trackColor,
           overflow: 'hidden',
           width: '100%',
@@ -52,7 +52,7 @@ export default function ProgressBar({
         style,
       ]}
       accessibilityRole="progressbar"
-      accessibilityValue={{ now: clamped * 100, min: 0, max: 100 }}
+      accessibilityValue={{ now: Math.round(clamped * 100), min: 0, max: 100 }}
     >
       <Animated.View
         style={{
@@ -60,7 +60,7 @@ export default function ProgressBar({
           left: 0,
           top: 0,
           height,
-          borderRadius: 50,
+          borderRadius: Math.round(height / 2),
           backgroundColor: fillColor,
           width: widthPercent,
         }}

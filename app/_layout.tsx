@@ -41,6 +41,7 @@ export default function RootLayout() {
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
         <Stack.Screen name="showcase" options={{ title: 'Component Showcase' }} />
         <Stack.Screen name="content-test" options={{ title: 'Content Diagnostic' }} />
+        <Stack.Screen name="lesson/[id]" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
