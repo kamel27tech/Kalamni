@@ -11,6 +11,8 @@ import { Ionicons } from '@expo/vector-icons';
 import Button from '@/components/atoms/Button';
 import { Icon, IconName } from '@/components/atoms/Icon';
 import HeaderActivity from '@/components/molecules/HeaderActivity';
+import PromptCard from '@/components/molecules/PromptCard';
+import AnswerOption from '@/components/molecules/AnswerOption';
 import ProgressBar from '@/components/atoms/ProgressBar';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
@@ -360,6 +362,22 @@ const pb = StyleSheet.create({
   },
 });
 
+// ─── Answer Option section ────────────────────────────────────────────────────
+
+const SHOWCASE_IMAGE = require('@/assets/images/icon.png');
+
+function AnswerOptionToggleDemo() {
+  const [selected, setSelected] = useState(false);
+  return (
+    <AnswerOption
+      state={selected ? 'selected' : 'default'}
+      text="الرياض"
+      transliteration="ar-Riyadh"
+      onPress={() => setSelected((s) => !s)}
+    />
+  );
+}
+
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export default function ShowcaseScreen() {
@@ -597,6 +615,95 @@ export default function ShowcaseScreen() {
           />
         </View>
 
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* PROMPT CARD                                                        */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Prompt Card" />
+
+        <GroupLabel label="1 · Short question" />
+        <View style={prompt.frame}>
+          <PromptCard text="ما هي عاصمة السعودية؟" />
+        </View>
+
+        <GroupLabel label="2 · Vocabulary question" />
+        <View style={prompt.frame}>
+          <PromptCard text="ما جمع كلمة كتاب؟" />
+        </View>
+
+        <GroupLabel label="3 · Long prompt (text wrapping)" />
+        <View style={prompt.frame}>
+          <PromptCard text="اختر الجملة الصحيحة التي تصف ما يفعله الطالب في الفصل الدراسي كل يوم." />
+        </View>
+
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* ANSWER OPTION                                                      */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Answer Option" />
+
+        <GroupLabel label="Text · 1 · Default — الرياض" />
+        <AnswerOption
+          state="default"
+          text="الرياض"
+          transliteration="ar-Riyadh"
+          onPress={() => console.log('pressed')}
+          style={ao.item}
+        />
+
+        <GroupLabel label="Text · 2 · Selected — دبي" />
+        <AnswerOption
+          state="selected"
+          text="دبي"
+          transliteration="Dubai"
+          onPress={() => console.log('pressed')}
+          style={ao.item}
+        />
+
+        <GroupLabel label="Text · 3 · Wrong — أبو ظبي" />
+        <AnswerOption
+          state="wrong"
+          text="أبو ظبي"
+          transliteration="Abu Dhabi"
+          onPress={() => console.log('pressed')}
+          style={ao.item}
+        />
+
+        <GroupLabel label="Image · 4 · Default" />
+        <View style={ao.imageWrap}>
+          <AnswerOption
+            state="default"
+            image={SHOWCASE_IMAGE}
+            imageAlt="Placeholder image"
+            onPress={() => console.log('pressed')}
+          />
+        </View>
+
+        <GroupLabel label="Image · 5 · Selected" />
+        <View style={ao.imageWrap}>
+          <AnswerOption
+            state="selected"
+            image={SHOWCASE_IMAGE}
+            imageAlt="Placeholder image"
+            onPress={() => console.log('pressed')}
+          />
+        </View>
+
+        <GroupLabel label="Image · 6 · Wrong" />
+        <View style={ao.imageWrap}>
+          <AnswerOption
+            state="wrong"
+            image={SHOWCASE_IMAGE}
+            imageAlt="Placeholder image"
+            onPress={() => console.log('pressed')}
+          />
+        </View>
+
+        <GroupLabel label="Interactive · Tap to toggle" />
+        <AnswerOptionToggleDemo />
+
         <View style={screen.bottomPad} />
       </ScrollView>
     </SafeAreaView>
@@ -677,6 +784,25 @@ const icons = StyleSheet.create({
     color: Colors.text.caption,
     fontSize: 10,
     textAlign: 'center',
+  },
+});
+
+const ao = StyleSheet.create({
+  item: {
+    marginBottom: 24,
+  },
+  imageWrap: {
+    width: 140,
+    marginBottom: 24,
+  },
+});
+
+const prompt = StyleSheet.create({
+  frame: {
+    backgroundColor: Colors.surface.default,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
   },
 });
 
