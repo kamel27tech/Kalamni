@@ -5,13 +5,16 @@ import { Typography } from '@/constants/typography';
 
 type PromptCardProps = {
   text: string;
+  language?: 'en' | 'ar';
   style?: ViewStyle;
 };
 
-export default function PromptCard({ text, style }: PromptCardProps) {
+export default function PromptCard({ text, language = 'en', style }: PromptCardProps) {
+  const textStyle = language === 'en' ? styles.textEn : styles.textAr;
+
   return (
     <View style={[styles.container, style]}>
-      <Text style={styles.text}>{text}</Text>
+      <Text style={textStyle}>{text}</Text>
     </View>
   );
 }
@@ -25,7 +28,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 20,
   },
-  text: {
+  textEn: {
+    ...Typography.english.title.m,
+    color: Colors.text.heading,
+    textAlign: 'left',
+  },
+  textAr: {
     ...Typography.arabic.title.m,
     color: Colors.text.heading,
     textAlign: 'right',

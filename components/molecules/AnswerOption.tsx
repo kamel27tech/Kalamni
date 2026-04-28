@@ -36,6 +36,7 @@ type AnswerOptionProps = (TextOption | ImageOption) & {
   state?: AnswerState;
   onPress: () => void;
   disabled?: boolean;
+  isGrouped?: boolean;
   style?: ViewStyle;
 };
 
@@ -84,6 +85,7 @@ export default function AnswerOption({
   state = 'default',
   onPress,
   disabled = false,
+  isGrouped = false,
   style,
   text,
   transliteration,
@@ -131,6 +133,7 @@ export default function AnswerOption({
         accessibilityState={{ disabled, selected: isChecked(state) }}
         style={[
           styles.container,
+          !isGrouped && styles.standaloneCard,
           isImage ? styles.imageContainer : styles.textContainer,
           { borderColor: borderColor(state), borderWidth: borderWidth(state) },
         ]}
@@ -161,9 +164,11 @@ export default function AnswerOption({
 
 const styles = StyleSheet.create({
   container: {
+    overflow: 'hidden',
+  },
+  standaloneCard: {
     backgroundColor: Colors.surface.subtle,
     borderRadius: 12,
-    overflow: 'hidden',
   },
   textContainer: {
     flexDirection: 'row',

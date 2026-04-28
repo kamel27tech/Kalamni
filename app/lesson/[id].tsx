@@ -133,7 +133,7 @@ export default function LessonPlayer() {
       </View>
 
       {/* Middle — exercise or completion message */}
-      <View style={styles.middle}>
+      <View style={[styles.middle, status === 'complete' && styles.middleComplete]}>
         {status === 'complete' ? (
           <View style={styles.centeredContent}>
             <Text style={styles.completeText}>Lesson Complete!</Text>
@@ -185,7 +185,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
   },
-  middle: {
+  middle: {},
+  middleComplete: {
     flex: 1,
   },
   centeredContent: {

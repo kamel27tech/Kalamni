@@ -5,6 +5,13 @@ import { ExerciseComponentProps } from '@/types/exercises';
 import AnswerOption, { AnswerState } from '@/components/molecules/AnswerOption';
 import PromptCard from '@/components/molecules/PromptCard';
 import { Spacing } from '@/constants/spacing';
+import { Colors } from '@/constants/colors';
+
+// Detect if text contains Arabic characters
+function isArabic(text: string): boolean {
+  const arabicRegex = /[؀-ۿ]/;
+  return arabicRegex.test(text);
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -25,22 +32,25 @@ export default function MultipleChoiceExercise({ data, selectedAnswer, isLocked,
     return 'default';
   }
 
+  const promptLanguage = isArabic(data.prompt) ? 'ar' : 'en';
+
   return (
     <View style={styles.root}>
-      <PromptCard text={data.prompt} />
+      <PromptCard text={data.prompt} language={promptLanguage} style={styles.prompt} />
 
-      <View style={styles.spacer} />
-
-      <View style={styles.optionList}>
-        {data.options.map((opt) => (
-          <AnswerOption
-            key={opt.text}
-            state={getOptionState(opt.text)}
-            text={opt.text}
-            transliteration={opt.transliteration}
-            disabled={isLocked}
-            onPress={() => onSelect(opt.text)}
-          />
+      <View style={styles.optionsGroup}>
+        {data.options.map((opt, idx) => (
+          <React.Fragment key={opt.text}>
+            {idx > 0 && <View style={styles.divider} />}
+            <AnswerOption
+              state={getOptionState(opt.text)}
+              text={opt.text}
+              transliteration={opt.transliteration}
+              disabled={isLocked}
+              isGrouped={true}
+              onPress={() => onSelect(opt.text)}
+            />
+          </React.Fragment>
         ))}
       </View>
     </View>
@@ -51,15 +61,20 @@ export default function MultipleChoiceExercise({ data, selectedAnswer, isLocked,
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
     alignSelf: 'stretch',
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.md,
   },
-  spacer: {
-    flex: 1,
+  prompt: {
+    marginBottom: 24,
   },
-  optionList: {
-    gap: 12,
+  optionsGroup: {
+    backgroundColor: Colors.surface.subtle,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: Colors.border.default,
   },
 });
