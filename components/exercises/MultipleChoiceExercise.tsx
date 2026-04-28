@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { MultipleChoiceExercise as MultipleChoiceExerciseType } from '@/types/content';
 import { ExerciseComponentProps } from '@/types/exercises';
 import AnswerOption, { AnswerState } from '@/components/molecules/AnswerOption';
 import PromptCard from '@/components/molecules/PromptCard';
 import { Spacing } from '@/constants/spacing';
+import { Typography } from '@/constants/typography';
+import { Colors } from '@/constants/colors';
 
 // Detect if text contains Arabic characters
 function isArabic(text: string): boolean {
@@ -35,6 +37,8 @@ export default function MultipleChoiceExercise({ data, selectedAnswer, isLocked,
 
   return (
     <View style={styles.root}>
+      <Text style={styles.instruction}>Please Select The Correct Answer</Text>
+
       <PromptCard text={data.prompt} language={promptLanguage} style={styles.prompt} />
 
       <View style={styles.optionsList}>
@@ -61,6 +65,11 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.md,
+  },
+  instruction: {
+    ...Typography.english.title.l,
+    color: Colors.text.heading,
+    marginBottom: 16,
   },
   prompt: {
     marginBottom: 24,
