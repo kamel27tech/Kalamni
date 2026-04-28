@@ -13,7 +13,6 @@ import { Icon, IconName } from '@/components/atoms/Icon';
 import HeaderActivity from '@/components/molecules/HeaderActivity';
 import PromptCard from '@/components/molecules/PromptCard';
 import AnswerOption from '@/components/molecules/AnswerOption';
-import FeedbackContainer from '@/components/molecules/FeedbackContainer';
 import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercise';
 import ProgressBar from '@/components/atoms/ProgressBar';
 import { Colors } from '@/constants/colors';
@@ -709,47 +708,6 @@ export default function ShowcaseScreen() {
         <Divider />
 
         {/* ══════════════════════════════════════════════════════════════════ */}
-        {/* FEEDBACK CONTAINER                                                */}
-        {/* ══════════════════════════════════════════════════════════════════ */}
-        <SectionTitle title="Feedback Container" />
-
-        <GroupLabel label="1 · Default — disabled button only" />
-        <FeedbackContainer state="default" style={fb.item} />
-
-        <GroupLabel label="2 · Correct — default message" />
-        <FeedbackContainer
-          state="correct"
-          onNext={() => console.log('next pressed')}
-          style={fb.item}
-        />
-
-        <GroupLabel label="3 · Wrong — short answer" />
-        <FeedbackContainer
-          state="wrong"
-          correctAnswer="الرياض"
-          onNext={() => console.log('next pressed')}
-          style={fb.item}
-        />
-
-        <GroupLabel label="4 · Wrong — long answer (text wrapping)" />
-        <FeedbackContainer
-          state="wrong"
-          correctAnswer="أنا أتعلم اللغة العربية لأني أريد أن أتحدث بشكل أفضل وأفهم أصدقائي الثقافة"
-          onNext={() => console.log('next pressed')}
-          style={fb.item}
-        />
-
-        <GroupLabel label="5 · Correct — custom message" />
-        <FeedbackContainer
-          state="correct"
-          successMessage="Perfect! Keep it up!"
-          onNext={() => console.log('next pressed')}
-          style={fb.item}
-        />
-
-        <Divider />
-
-        {/* ══════════════════════════════════════════════════════════════════ */}
         {/* MULTIPLE CHOICE EXERCISE                                           */}
         {/* ══════════════════════════════════════════════════════════════════ */}
         <SectionTitle title="Multiple Choice Exercise" />
@@ -773,7 +731,7 @@ export default function ShowcaseScreen() {
           />
         </View>
 
-        <GroupLabel label="2 · Answer selected, not checked" />
+        <GroupLabel label="2 · Answer selected (before lock)" />
         <View style={mce.container}>
           <MultipleChoiceExercise
             data={{
@@ -792,7 +750,7 @@ export default function ShowcaseScreen() {
           />
         </View>
 
-        <GroupLabel label="3 · Correct — locked, feedback visible" />
+        <GroupLabel label="3 · Correct answer — locked" />
         <View style={mce.container}>
           <MultipleChoiceExercise
             data={{
@@ -811,7 +769,7 @@ export default function ShowcaseScreen() {
           />
         </View>
 
-        <GroupLabel label="4 · Wrong — locked, correct answer shown" />
+        <GroupLabel label="4 · Wrong answer — locked" />
         <View style={mce.container}>
           <MultipleChoiceExercise
             data={{
@@ -928,12 +886,6 @@ const prompt = StyleSheet.create({
     backgroundColor: Colors.surface.default,
     borderRadius: 12,
     padding: 16,
-    marginBottom: 24,
-  },
-});
-
-const fb = StyleSheet.create({
-  item: {
     marginBottom: 24,
   },
 });
