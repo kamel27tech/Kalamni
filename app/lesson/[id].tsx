@@ -5,12 +5,26 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import Button from '@/components/atoms/Button';
 import { Icon } from '@/components/atoms/Icon';
 import HeaderActivity from '@/components/molecules/HeaderActivity';
+import FeedbackContainer from '@/components/molecules/FeedbackContainer';
+import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercise';
 import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
 import { Typography } from '@/constants/typography';
 import { getLessonById, getExercisesByLesson } from '@/lib/content';
+import { Exercise } from '@/types/content';
+import { ButtonVariant } from '@/components/atoms/Button';
 
 type LessonStatus = 'playing' | 'complete';
+
+// Returns the correct answer string for exercise types that have one.
+function getCorrectAnswer(exercise: Exercise): string {
+  if (exercise.type === 'multiple-choice' || exercise.type === 'listening') {
+    return exercise.data.correctAnswer;
+  }
+  return '';
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function LessonPlayer() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,15 +33,21 @@ export default function LessonPlayer() {
   const lesson = getLessonById(id);
   const exercises = getExercisesByLesson(id);
 
+  // ── Lesson-level state ────────────────────────────────────────────────────
   const [currentIndex, setCurrentIndex] = useState(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [answerHistory, setAnswerHistory] = useState<boolean[]>([]);
   const [status, setStatus] = useState<LessonStatus>('playing');
 
+  // ── Exercise-level controlled state (reset on every advance) ──────────────
+  const [selectedAnswer, setSelectedAnswer] = useState<string | string[] | null>(null);
+  const [isLocked, setIsLocked] = useState(false);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  // ── Error states ──────────────────────────────────────────────────────────
   if (!lesson) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.centered}>
+        <View style={styles.centeredContent}>
           <Text style={styles.messageText}>Lesson not found</Text>
           <Button label="Go Back" variant="primary" onPress={() => router.back()} />
         </View>
@@ -38,7 +58,7 @@ export default function LessonPlayer() {
   if (exercises.length === 0) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.centered}>
+        <View style={styles.centeredContent}>
           <Text style={styles.messageText}>No exercises in this lesson yet</Text>
           <Button label="Go Back" variant="primary" onPress={() => router.back()} />
         </View>
@@ -49,7 +69,24 @@ export default function LessonPlayer() {
   const currentExercise = exercises[currentIndex];
   const progress = status === 'complete' ? 1 : currentIndex / exercises.length;
 
+  // ── Handlers ──────────────────────────────────────────────────────────────
+
+  // Called immediately when the user taps an option — locks the exercise and
+  // shows feedback without requiring a separate submit tap.
+  const handleSelect = (answer: string | string[]) => {
+    setSelectedAnswer(answer);
+    setIsLocked(true);
+    const correct = answer === getCorrectAnswer(currentExercise);
+    setIsCorrect(correct);
+  };
+
+  // Advances to the next exercise (or completes the lesson).
+  // isLocked is always true when this can be called (button is disabled otherwise).
   const handleNext = () => {
+    setAnswerHistory((prev) => [...prev, isCorrect!]);
+    setSelectedAnswer(null);
+    setIsLocked(false);
+    setIsCorrect(null);
     if (currentIndex < exercises.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
@@ -57,14 +94,41 @@ export default function LessonPlayer() {
     }
   };
 
-  const nextLabel =
-    currentIndex < exercises.length - 1
-      ? `Next exercise, ${currentIndex + 2} of ${exercises.length}`
-      : 'Finish lesson';
+  // ── Exercise renderer — extend this switch for new types ──────────────────
+  function renderExercise() {
+    const exercise = currentExercise;
+    if (exercise.type === 'multiple-choice') {
+      return (
+        <MultipleChoiceExercise
+          key={exercise.id}
+          data={exercise.data}
+          selectedAnswer={selectedAnswer}
+          isLocked={isLocked}
+          onSelect={handleSelect}
+        />
+      );
+    }
+    // Placeholder for unimplemented exercise types
+    return (
+      <View style={styles.centeredContent}>
+        <Text style={styles.exerciseIndex}>
+          Exercise {currentIndex + 1} of {exercises.length}
+        </Text>
+        <Text style={styles.exerciseType}>Type: {exercise.type}</Text>
+      </View>
+    );
+  }
 
+  // ── Button config ─────────────────────────────────────────────────────────
+  const nextDisabled = selectedAnswer === null;
+  const nextVariant: ButtonVariant =
+    !isLocked ? 'primary' : isCorrect ? 'correct' : 'wrong';
+  const nextIconColor = nextDisabled ? Colors.icon.disabled : Colors.icon.negative;
+
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      {/* Top bar */}
+      {/* Header */}
       <View style={styles.headerContainer}>
         <HeaderActivity
           progress={progress}
@@ -76,38 +140,45 @@ export default function LessonPlayer() {
         />
       </View>
 
-      {/* Middle area — Phase 1 placeholder */}
+      {/* Middle — exercise or completion message */}
       <View style={styles.middle}>
         {status === 'complete' ? (
-          <Text style={styles.completeText}>Lesson Complete!</Text>
+          <View style={styles.centeredContent}>
+            <Text style={styles.completeText}>Lesson Complete!</Text>
+          </View>
         ) : (
-          <>
-            <Text style={styles.exerciseIndex}>
-              Exercise {currentIndex + 1} of {exercises.length}
-            </Text>
-            <Text style={styles.exerciseType}>Type: {currentExercise.type}</Text>
-          </>
+          renderExercise()
         )}
       </View>
 
-      {/* Bottom button area */}
+      {/* Feedback strip — appears immediately after selection */}
+      {status === 'playing' && isLocked && (
+        isCorrect ? (
+          <FeedbackContainer state="correct" style={styles.feedback} />
+        ) : (
+          <FeedbackContainer
+            state="wrong"
+            correctAnswer={getCorrectAnswer(currentExercise)}
+            style={styles.feedback}
+          />
+        )
+      )}
+
+      {/* Bottom button */}
       <View style={styles.bottomContainer}>
         <View style={styles.buttonCard}>
           {status === 'complete' ? (
             <Button
               label="Back to Home"
               variant="primary"
-              accessibilityLabel="Return to home screen"
               onPress={() => router.replace('/')}
             />
           ) : (
             <Button
               label="Next"
-              variant="primary"
-              rightIcon={
-                <Icon name="arrow_forward" size={24} color={Colors.icon.negative} />
-              }
-              accessibilityLabel={nextLabel}
+              variant={nextVariant}
+              disabled={nextDisabled}
+              rightIcon={<Icon name="arrow_forward" size={24} color={nextIconColor} />}
               onPress={handleNext}
             />
           )}
@@ -116,6 +187,8 @@ export default function LessonPlayer() {
     </SafeAreaView>
   );
 }
+
+// ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   safe: {
@@ -127,6 +200,9 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.md,
   },
   middle: {
+    flex: 1,
+  },
+  centeredContent: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -148,6 +224,9 @@ const styles = StyleSheet.create({
     color: Colors.text.heading,
     textAlign: 'center',
   },
+  feedback: {
+    marginHorizontal: Spacing.md,
+  },
   bottomContainer: {
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.md,
@@ -156,13 +235,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface.subtle,
     borderRadius: 16,
     padding: Spacing.md,
-  },
-  centered: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: Spacing.lg,
-    gap: Spacing.lg,
   },
   messageText: {
     ...Typography.english.body.l,

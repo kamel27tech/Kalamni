@@ -13,6 +13,7 @@ import { Icon, IconName } from '@/components/atoms/Icon';
 import HeaderActivity from '@/components/molecules/HeaderActivity';
 import PromptCard from '@/components/molecules/PromptCard';
 import AnswerOption from '@/components/molecules/AnswerOption';
+import FeedbackContainer from '@/components/molecules/FeedbackContainer';
 import ProgressBar from '@/components/atoms/ProgressBar';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
@@ -704,6 +705,37 @@ export default function ShowcaseScreen() {
         <GroupLabel label="Interactive · Tap to toggle" />
         <AnswerOptionToggleDemo />
 
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* FEEDBACK CONTAINER                                                */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Feedback Container" />
+
+        <GroupLabel label="1 · Correct — default message" />
+        <FeedbackContainer state="correct" style={fb.item} />
+
+        <GroupLabel label="2 · Wrong — short answer" />
+        <FeedbackContainer
+          state="wrong"
+          correctAnswer="الرياض"
+          style={fb.item}
+        />
+
+        <GroupLabel label="3 · Wrong — long answer (text wrapping)" />
+        <FeedbackContainer
+          state="wrong"
+          correctAnswer="أنا أتعلم اللغة العربية لأني أريد أن أتحدث بشكل أفضل وأفهم أصدقائي الثقافة"
+          style={fb.item}
+        />
+
+        <GroupLabel label="4 · Correct — custom message" />
+        <FeedbackContainer
+          state="correct"
+          successMessage="Perfect! Keep it up!"
+          style={fb.item}
+        />
+
         <View style={screen.bottomPad} />
       </ScrollView>
     </SafeAreaView>
@@ -802,6 +834,12 @@ const prompt = StyleSheet.create({
     backgroundColor: Colors.surface.default,
     borderRadius: 12,
     padding: 16,
+    marginBottom: 24,
+  },
+});
+
+const fb = StyleSheet.create({
+  item: {
     marginBottom: 24,
   },
 });
