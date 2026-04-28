@@ -164,12 +164,11 @@ export default function AnswerOption({
 
 const styles = StyleSheet.create({
   container: {
-    overflow: 'hidden',
-  },
-  standaloneCard: {
     backgroundColor: Colors.surface.subtle,
     borderRadius: 12,
+    overflow: 'hidden',
   },
+  standaloneCard: {},
   textContainer: {
     flexDirection: 'row',
     alignItems: 'center',

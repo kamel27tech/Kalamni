@@ -5,7 +5,6 @@ import { ExerciseComponentProps } from '@/types/exercises';
 import AnswerOption, { AnswerState } from '@/components/molecules/AnswerOption';
 import PromptCard from '@/components/molecules/PromptCard';
 import { Spacing } from '@/constants/spacing';
-import { Colors } from '@/constants/colors';
 
 // Detect if text contains Arabic characters
 function isArabic(text: string): boolean {
@@ -38,19 +37,17 @@ export default function MultipleChoiceExercise({ data, selectedAnswer, isLocked,
     <View style={styles.root}>
       <PromptCard text={data.prompt} language={promptLanguage} style={styles.prompt} />
 
-      <View style={styles.optionsGroup}>
-        {data.options.map((opt, idx) => (
-          <React.Fragment key={opt.text}>
-            {idx > 0 && <View style={styles.divider} />}
-            <AnswerOption
-              state={getOptionState(opt.text)}
-              text={opt.text}
-              transliteration={opt.transliteration}
-              disabled={isLocked}
-              isGrouped={true}
-              onPress={() => onSelect(opt.text)}
-            />
-          </React.Fragment>
+      <View style={styles.optionsList}>
+        {data.options.map((opt) => (
+          <AnswerOption
+            key={opt.text}
+            state={getOptionState(opt.text)}
+            text={opt.text}
+            transliteration={opt.transliteration}
+            disabled={isLocked}
+            isGrouped={false}
+            onPress={() => onSelect(opt.text)}
+          />
         ))}
       </View>
     </View>
@@ -68,13 +65,7 @@ const styles = StyleSheet.create({
   prompt: {
     marginBottom: 24,
   },
-  optionsGroup: {
-    backgroundColor: Colors.surface.subtle,
-    borderRadius: 16,
-    overflow: 'hidden',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: Colors.border.default,
+  optionsList: {
+    gap: 12,
   },
 });
