@@ -39,20 +39,22 @@ export default function MultipleChoiceExercise({ data, selectedAnswer, isLocked,
     <View style={styles.root}>
       <Text style={styles.instruction}>Please Select The Correct Answer</Text>
 
-      <PromptCard text={data.prompt} language={promptLanguage} style={styles.prompt} />
+      <PromptCard text={data.prompt} language={promptLanguage} />
 
-      <View style={styles.optionsList}>
-        {data.options.map((opt) => (
-          <AnswerOption
-            key={opt.text}
-            state={getOptionState(opt.text)}
-            text={opt.text}
-            transliteration={opt.transliteration}
-            disabled={isLocked}
-            isGrouped={false}
-            onPress={() => onSelect(opt.text)}
-          />
-        ))}
+      <View style={styles.contentContainer}>
+        <View style={styles.optionsList}>
+          {data.options.map((opt) => (
+            <AnswerOption
+              key={opt.text}
+              state={getOptionState(opt.text)}
+              text={opt.text}
+              transliteration={opt.transliteration}
+              disabled={isLocked}
+              isGrouped={false}
+              onPress={() => onSelect(opt.text)}
+            />
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -71,8 +73,11 @@ const styles = StyleSheet.create({
     color: Colors.text.heading,
     marginBottom: 16,
   },
-  prompt: {
-    marginBottom: 24,
+  contentContainer: {
+    backgroundColor: Colors.surface.subtle,
+    borderRadius: 16,
+    padding: 20,
+    gap: 24,
   },
   optionsList: {
     gap: 12,

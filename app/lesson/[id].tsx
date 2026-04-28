@@ -145,7 +145,7 @@ export default function LessonPlayer() {
 
       {/* Bottom feedback + button area */}
       <View style={styles.bottomContainer}>
-        <View style={styles.feedbackCard}>
+        <View style={[styles.contentContainer, styles.feedbackCard]}>
           {status === 'complete' ? (
             <Button
               label="Back to Home"
@@ -215,11 +215,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.md,
   },
-  feedbackCard: {
+  contentContainer: {
     backgroundColor: Colors.surface.subtle,
     borderRadius: 16,
-    padding: Spacing.md,
+    padding: 20,
   },
+  feedbackCard: {},
   feedbackContent: {},
   messageText: {
     ...Typography.english.body.l,
