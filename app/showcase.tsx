@@ -14,6 +14,7 @@ import HeaderActivity from '@/components/molecules/HeaderActivity';
 import PromptCard from '@/components/molecules/PromptCard';
 import AnswerOption from '@/components/molecules/AnswerOption';
 import FeedbackContainer from '@/components/molecules/FeedbackContainer';
+import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercise';
 import ProgressBar from '@/components/atoms/ProgressBar';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
@@ -746,6 +747,89 @@ export default function ShowcaseScreen() {
           style={fb.item}
         />
 
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* MULTIPLE CHOICE EXERCISE                                           */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Multiple Choice Exercise" />
+
+        <GroupLabel label="1 · Default — no answer selected" />
+        <View style={mce.container}>
+          <MultipleChoiceExercise
+            data={{
+              prompt: 'ما هي عاصمة السعودية؟',
+              correctAnswer: 'الرياض',
+              options: [
+                { text: 'الرياض', transliteration: 'Ar-Riyadh' },
+                { text: 'جدة', transliteration: 'Jeddah' },
+                { text: 'الدمام', transliteration: 'Ad-Dammam' },
+                { text: 'مكة', transliteration: 'Makkah' },
+              ],
+            }}
+            selectedAnswer={null}
+            isLocked={false}
+            onSelect={() => console.log('selected')}
+          />
+        </View>
+
+        <GroupLabel label="2 · Answer selected, not checked" />
+        <View style={mce.container}>
+          <MultipleChoiceExercise
+            data={{
+              prompt: 'ما هي عاصمة السعودية؟',
+              correctAnswer: 'الرياض',
+              options: [
+                { text: 'الرياض', transliteration: 'Ar-Riyadh' },
+                { text: 'جدة', transliteration: 'Jeddah' },
+                { text: 'الدمام', transliteration: 'Ad-Dammam' },
+                { text: 'مكة', transliteration: 'Makkah' },
+              ],
+            }}
+            selectedAnswer="الرياض"
+            isLocked={false}
+            onSelect={() => console.log('selected')}
+          />
+        </View>
+
+        <GroupLabel label="3 · Correct — locked, feedback visible" />
+        <View style={mce.container}>
+          <MultipleChoiceExercise
+            data={{
+              prompt: 'ما هي عاصمة السعودية؟',
+              correctAnswer: 'الرياض',
+              options: [
+                { text: 'الرياض', transliteration: 'Ar-Riyadh' },
+                { text: 'جدة', transliteration: 'Jeddah' },
+                { text: 'الدمام', transliteration: 'Ad-Dammam' },
+                { text: 'مكة', transliteration: 'Makkah' },
+              ],
+            }}
+            selectedAnswer="الرياض"
+            isLocked={true}
+            onSelect={() => console.log('next pressed')}
+          />
+        </View>
+
+        <GroupLabel label="4 · Wrong — locked, correct answer shown" />
+        <View style={mce.container}>
+          <MultipleChoiceExercise
+            data={{
+              prompt: 'ما هي عاصمة السعودية؟',
+              correctAnswer: 'الرياض',
+              options: [
+                { text: 'الرياض', transliteration: 'Ar-Riyadh' },
+                { text: 'جدة', transliteration: 'Jeddah' },
+                { text: 'الدمام', transliteration: 'Ad-Dammam' },
+                { text: 'مكة', transliteration: 'Makkah' },
+              ],
+            }}
+            selectedAnswer="جدة"
+            isLocked={true}
+            onSelect={() => console.log('next pressed')}
+          />
+        </View>
+
         <View style={screen.bottomPad} />
       </ScrollView>
     </SafeAreaView>
@@ -851,6 +935,17 @@ const prompt = StyleSheet.create({
 const fb = StyleSheet.create({
   item: {
     marginBottom: 24,
+  },
+});
+
+const mce = StyleSheet.create({
+  container: {
+    height: 500,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
 });
 
