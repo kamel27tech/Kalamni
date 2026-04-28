@@ -15,8 +15,8 @@ type FeedbackContainerProps = {
 };
 
 function getMessage(state: FeedbackState): string {
-  if (state === 'correct') return 'Great job! That's correct.';
-  if (state === 'wrong') return 'That's not right. Try again!';
+  if (state === 'correct') return 'Great job! That\'s correct.';
+  if (state === 'wrong') return 'That\'s not right. Try again!';
   return 'Select an answer to continue.';
 }
 
