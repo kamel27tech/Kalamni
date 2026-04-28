@@ -185,7 +185,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
   },
-  middle: {},
+  middle: {
+    flex: 1,
+  },
   middleComplete: {
     flex: 1,
   },
