@@ -712,27 +712,37 @@ export default function ShowcaseScreen() {
         {/* ══════════════════════════════════════════════════════════════════ */}
         <SectionTitle title="Feedback Container" />
 
-        <GroupLabel label="1 · Correct — default message" />
-        <FeedbackContainer state="correct" style={fb.item} />
+        <GroupLabel label="1 · Default — disabled button only" />
+        <FeedbackContainer state="default" style={fb.item} />
 
-        <GroupLabel label="2 · Wrong — short answer" />
+        <GroupLabel label="2 · Correct — default message" />
+        <FeedbackContainer
+          state="correct"
+          onNext={() => console.log('next pressed')}
+          style={fb.item}
+        />
+
+        <GroupLabel label="3 · Wrong — short answer" />
         <FeedbackContainer
           state="wrong"
           correctAnswer="الرياض"
+          onNext={() => console.log('next pressed')}
           style={fb.item}
         />
 
-        <GroupLabel label="3 · Wrong — long answer (text wrapping)" />
+        <GroupLabel label="4 · Wrong — long answer (text wrapping)" />
         <FeedbackContainer
           state="wrong"
           correctAnswer="أنا أتعلم اللغة العربية لأني أريد أن أتحدث بشكل أفضل وأفهم أصدقائي الثقافة"
+          onNext={() => console.log('next pressed')}
           style={fb.item}
         />
 
-        <GroupLabel label="4 · Correct — custom message" />
+        <GroupLabel label="5 · Correct — custom message" />
         <FeedbackContainer
           state="correct"
           successMessage="Perfect! Keep it up!"
+          onNext={() => console.log('next pressed')}
           style={fb.item}
         />
 

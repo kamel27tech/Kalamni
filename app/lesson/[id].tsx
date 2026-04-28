@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Button from '@/components/atoms/Button';
-import { Icon } from '@/components/atoms/Icon';
 import HeaderActivity from '@/components/molecules/HeaderActivity';
 import FeedbackContainer from '@/components/molecules/FeedbackContainer';
 import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercise';
@@ -12,7 +11,6 @@ import { Spacing } from '@/constants/spacing';
 import { Typography } from '@/constants/typography';
 import { getLessonById, getExercisesByLesson } from '@/lib/content';
 import { Exercise } from '@/types/content';
-import { ButtonVariant } from '@/components/atoms/Button';
 
 type LessonStatus = 'playing' | 'complete';
 
@@ -119,13 +117,7 @@ export default function LessonPlayer() {
     );
   }
 
-  // ── Button config ─────────────────────────────────────────────────────────
-  const nextDisabled = selectedAnswer === null;
-  const nextVariant: ButtonVariant =
-    !isLocked ? 'primary' : isCorrect ? 'correct' : 'wrong';
-  const nextIconColor = nextDisabled ? Colors.icon.disabled : Colors.icon.negative;
-
-  // ── Render ────────────────────────────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────────────
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       {/* Header */}
@@ -151,35 +143,29 @@ export default function LessonPlayer() {
         )}
       </View>
 
-      {/* Feedback strip — appears immediately after selection */}
-      {status === 'playing' && isLocked && (
-        isCorrect ? (
-          <FeedbackContainer state="correct" style={styles.feedback} />
-        ) : (
-          <FeedbackContainer
-            state="wrong"
-            correctAnswer={getCorrectAnswer(currentExercise)}
-            style={styles.feedback}
-          />
-        )
-      )}
-
-      {/* Bottom button */}
+      {/* Bottom feedback + button area */}
       <View style={styles.bottomContainer}>
-        <View style={styles.buttonCard}>
+        <View style={styles.feedbackCard}>
           {status === 'complete' ? (
             <Button
               label="Back to Home"
               variant="primary"
               onPress={() => router.replace('/')}
             />
+          ) : selectedAnswer === null ? (
+            <FeedbackContainer state="default" style={styles.feedbackContent} />
+          ) : isCorrect ? (
+            <FeedbackContainer
+              state="correct"
+              onNext={handleNext}
+              style={styles.feedbackContent}
+            />
           ) : (
-            <Button
-              label="Next"
-              variant={nextVariant}
-              disabled={nextDisabled}
-              rightIcon={<Icon name="arrow_forward" size={24} color={nextIconColor} />}
-              onPress={handleNext}
+            <FeedbackContainer
+              state="wrong"
+              correctAnswer={getCorrectAnswer(currentExercise)}
+              onNext={handleNext}
+              style={styles.feedbackContent}
             />
           )}
         </View>
@@ -224,18 +210,16 @@ const styles = StyleSheet.create({
     color: Colors.text.heading,
     textAlign: 'center',
   },
-  feedback: {
-    marginHorizontal: Spacing.md,
-  },
   bottomContainer: {
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.md,
   },
-  buttonCard: {
+  feedbackCard: {
     backgroundColor: Colors.surface.subtle,
     borderRadius: 16,
     padding: Spacing.md,
   },
+  feedbackContent: {},
   messageText: {
     ...Typography.english.body.l,
     color: Colors.text.body,
