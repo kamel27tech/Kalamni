@@ -1,34 +1,45 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import Button from '@/components/atoms/Button';
 import HeaderActivity from '@/components/molecules/HeaderActivity';
 import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercise';
+import ListeningExercise from '@/components/exercises/ListeningExercise';
 import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
 import { Typography } from '@/constants/typography';
-import { getLessonById, getExercisesByLesson } from '@/lib/content';
+import lessonData from '@/data/lesson.json';
 import { Exercise } from '@/types/content';
+
+// Cast the JSON to the typed Exercise array — lesson.json is the authoritative test fixture
+const exercises = [...(lessonData.exercises as Exercise[])].sort(
+  (a, b) => a.order - b.order,
+);
+
+// Maps audio paths from lesson.json to bundled local assets.
+// expo-av cannot resolve bare relative string paths — require() gives the module ID.
+const AUDIO_MAP: Record<string, number> = {
+  'assets/audio/greeting-hello.mp3': require('@/assets/audio/greeting-hello.mp3'),
+};
+
+function resolveAudio(url: string): string | number {
+  return AUDIO_MAP[url] ?? url;
+}
 
 type LessonStatus = 'playing' | 'complete';
 
-// Returns the correct answer string for exercise types that have one.
+// Returns the value to compare against the selected answer for each exercise type.
 function getCorrectAnswer(exercise: Exercise): string {
-  if (exercise.type === 'multiple-choice' || exercise.type === 'listening') {
-    return exercise.data.correctAnswer;
-  }
+  if (exercise.type === 'multiple-choice') return exercise.data.correctAnswer;
+  if (exercise.type === 'listening') return exercise.data.correctAnswerId;
   return '';
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function LessonPlayer() {
-  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-
-  const lesson = getLessonById(id);
-  const exercises = getExercisesByLesson(id);
 
   // ── Lesson-level state ────────────────────────────────────────────────────
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -40,36 +51,12 @@ export default function LessonPlayer() {
   const [isLocked, setIsLocked] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  // ── Error states ──────────────────────────────────────────────────────────
-  if (!lesson) {
-    return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.centeredContent}>
-          <Text style={styles.messageText}>Lesson not found</Text>
-          <Button label="Go Back" variant="primary" onPress={() => router.back()} />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (exercises.length === 0) {
-    return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.centeredContent}>
-          <Text style={styles.messageText}>No exercises in this lesson yet</Text>
-          <Button label="Go Back" variant="primary" onPress={() => router.back()} />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   const currentExercise = exercises[currentIndex];
   const progress = status === 'complete' ? 1 : currentIndex / exercises.length;
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
-  // Called immediately when the user taps an option — locks the exercise and
-  // shows feedback without requiring a separate submit tap.
+  // Called immediately when the user taps an option — locks and shows feedback.
   const handleSelect = (answer: string | string[]) => {
     setSelectedAnswer(answer);
     setIsLocked(true);
@@ -78,7 +65,6 @@ export default function LessonPlayer() {
   };
 
   // Advances to the next exercise (or completes the lesson).
-  // isLocked is always true when this can be called (button is disabled otherwise).
   const handleNext = () => {
     setAnswerHistory((prev) => [...prev, isCorrect!]);
     setSelectedAnswer(null);
@@ -91,7 +77,7 @@ export default function LessonPlayer() {
     }
   };
 
-  // ── Exercise renderer — extend this switch for new types ──────────────────
+  // ── Exercise renderer ─────────────────────────────────────────────────────
   function renderExercise() {
     const exercise = currentExercise;
     const feedbackState =
@@ -110,18 +96,34 @@ export default function LessonPlayer() {
         />
       );
     }
-    // Placeholder for unimplemented exercise types
+
+    if (exercise.type === 'listening') {
+      return (
+        <ListeningExercise
+          key={exercise.id}
+          data={{ ...exercise.data, audioUrl: resolveAudio(exercise.data.audioUrl) }}
+          selectedAnswer={selectedAnswer}
+          isLocked={isLocked}
+          onSelect={handleSelect}
+          feedbackState={feedbackState}
+          onNext={handleNext}
+        />
+      );
+    }
+
+    // Placeholder for exercise types not yet implemented (matching-pairs, tap-to-build)
     return (
       <View style={styles.centeredContent}>
         <Text style={styles.exerciseIndex}>
           Exercise {currentIndex + 1} of {exercises.length}
         </Text>
         <Text style={styles.exerciseType}>Type: {exercise.type}</Text>
+        <Button label="Skip" variant="secondary" onPress={handleNext} />
       </View>
     );
   }
 
-  // ── Render ────────────────────────────────────────────────────────────
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       {/* Header */}
@@ -136,7 +138,7 @@ export default function LessonPlayer() {
         />
       </View>
 
-      {/* Content — exercise or completion message */}
+      {/* Content */}
       <View style={styles.content}>
         {status === 'complete' ? (
           <View style={styles.centeredContent}>
@@ -189,11 +191,6 @@ const styles = StyleSheet.create({
   completeText: {
     ...Typography.english.heading.h2,
     color: Colors.text.heading,
-    textAlign: 'center',
-  },
-  messageText: {
-    ...Typography.english.body.l,
-    color: Colors.text.body,
     textAlign: 'center',
   },
 });

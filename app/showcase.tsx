@@ -15,6 +15,8 @@ import PromptCard from '@/components/molecules/PromptCard';
 import AnswerOption from '@/components/molecules/AnswerOption';
 import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercise';
 import ProgressBar from '@/components/atoms/ProgressBar';
+import AudioPlayer, { AudioPlayerView } from '@/components/molecules/AudioPlayer';
+import ListeningExercise from '@/components/exercises/ListeningExercise';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
 
@@ -788,6 +790,120 @@ export default function ShowcaseScreen() {
           />
         </View>
 
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* LISTENING EXERCISE                                                */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Listening Exercise" />
+
+        <GroupLabel label="1 · Default — no answer selected" />
+        <View style={le.container}>
+          <ListeningExercise
+            data={{
+              prompt: 'Listen And Choose The Correct Answer',
+              audioUrl: require('@/assets/audio/test-audio.wav'),
+              correctAnswerId: 'a2',
+              options: [
+                { id: 'a1', text: 'دبي', transliteration: 'Dubai' },
+                { id: 'a2', text: 'الرياض', transliteration: 'Ar-Riyadh' },
+                { id: 'a3', text: 'أبو ظبي', transliteration: 'Abu Dhabi' },
+              ],
+            }}
+            selectedAnswer={null}
+            isLocked={false}
+            onSelect={() => console.log('selected')}
+          />
+        </View>
+
+        <GroupLabel label="2 · Answer selected (before lock)" />
+        <View style={le.container}>
+          <ListeningExercise
+            data={{
+              prompt: 'Listen And Choose The Correct Answer',
+              audioUrl: require('@/assets/audio/test-audio.wav'),
+              correctAnswerId: 'a2',
+              options: [
+                { id: 'a1', text: 'دبي', transliteration: 'Dubai' },
+                { id: 'a2', text: 'الرياض', transliteration: 'Ar-Riyadh' },
+                { id: 'a3', text: 'أبو ظبي', transliteration: 'Abu Dhabi' },
+              ],
+            }}
+            selectedAnswer="a2"
+            isLocked={false}
+            onSelect={() => console.log('selected')}
+          />
+        </View>
+
+        <GroupLabel label="3 · Correct answer — locked" />
+        <View style={le.container}>
+          <ListeningExercise
+            data={{
+              prompt: 'Listen And Choose The Correct Answer',
+              audioUrl: require('@/assets/audio/test-audio.wav'),
+              correctAnswerId: 'b2',
+              options: [
+                { id: 'b1', text: 'شكراً', transliteration: 'shukran' },
+                { id: 'b2', text: 'مرحباً', transliteration: 'marhaban' },
+                { id: 'b3', text: 'وداعاً', transliteration: "wadaa'an" },
+              ],
+            }}
+            selectedAnswer="b2"
+            isLocked={true}
+            onSelect={() => console.log('next')}
+          />
+        </View>
+
+        <GroupLabel label="4 · Wrong answer — locked" />
+        <View style={le.container}>
+          <ListeningExercise
+            data={{
+              prompt: 'Listen And Choose The Correct Answer',
+              audioUrl: require('@/assets/audio/test-audio.wav'),
+              correctAnswerId: 'b2',
+              options: [
+                { id: 'b1', text: 'شكراً', transliteration: 'shukran' },
+                { id: 'b2', text: 'مرحباً', transliteration: 'marhaban' },
+                { id: 'b3', text: 'وداعاً', transliteration: "wadaa'an" },
+              ],
+            }}
+            selectedAnswer="b1"
+            isLocked={true}
+            onSelect={() => console.log('next')}
+          />
+        </View>
+
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* AUDIO PLAYER                                                      */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Audio Player" />
+
+        <GroupLabel label="1 · Paused — no progress" />
+        <View style={apInteractive.preview}>
+          <AudioPlayerView isPlaying={false} progress={0} />
+        </View>
+
+        <GroupLabel label="2 · Playing — 50% progress" />
+        <View style={apInteractive.preview}>
+          <AudioPlayerView isPlaying={true} progress={0.5} />
+        </View>
+
+        <GroupLabel label="3 · Completed — full progress" />
+        <View style={apInteractive.preview}>
+          <AudioPlayerView isPlaying={false} progress={1} />
+        </View>
+
+        <GroupLabel label="Interactive — test audio (3 s silent tone)" />
+        <View style={apInteractive.card}>
+          <AudioPlayer
+            audioUrl={require('@/assets/audio/test-audio.wav')}
+            onPlayStart={() => console.log('[Showcase] Audio play started')}
+            onPlayEnd={() => console.log('[Showcase] Audio play ended')}
+          />
+        </View>
+
+        <Divider />
+
         <View style={screen.bottomPad} />
       </ScrollView>
     </SafeAreaView>
@@ -898,6 +1014,32 @@ const mce = StyleSheet.create({
     borderColor: Colors.border.default,
     borderRadius: 12,
     overflow: 'hidden',
+  },
+});
+
+const le = StyleSheet.create({
+  container: {
+    height: 500,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+});
+
+const apInteractive = StyleSheet.create({
+  preview: {
+    marginBottom: 24,
+  },
+  card: {
+    backgroundColor: Colors.surface.subtle,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 24,
   },
 });
 

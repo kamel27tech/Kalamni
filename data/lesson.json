@@ -16,22 +16,23 @@
           { "text": "مرحبا", "transliteration": "marhaba" },
           { "text": "شكرا", "transliteration": "shukran" },
           { "text": "وداعا", "transliteration": "wadaan" },
-          { "text": "نعم", "transliteration": "naam" }
+        
         ]
       }
     },
     {
       "id": "ex-002",
-      "type": "multiple-choice",
+      "type": "listening",
       "order": 2,
       "data": {
-        "prompt": "What does 'أهلا' mean?",
-        "correctAnswer": "Hi",
+        "prompt": "Listen and choose the correct answer",
+        "audioUrl": "assets/audio/greeting-hello.mp3",
+        "correctAnswerId": "opt-001",
         "options": [
-          { "text": "Hi" },
-          { "text": "Thank you" },
-          { "text": "Sorry" },
-          { "text": "Yes" }
+          { "id": "opt-001", "text": "مرحبا", "transliteration": "marhaba" },
+          { "id": "opt-002", "text": "وداعا", "transliteration": "wadaan" },
+          { "id": "opt-003", "text": "شكرا", "transliteration": "shukran" },
+        
         ]
       }
     },
@@ -46,7 +47,7 @@
           { "text": "مرحبا", "transliteration": "marhaba" },
           { "text": "وداعا", "transliteration": "wadaan" },
           { "text": "أهلا", "transliteration": "ahlan" },
-          { "text": "نعم", "transliteration": "naam" }
+          
         ]
       }
     },
@@ -61,7 +62,7 @@
           { "text": "السلام عليكم", "transliteration": "as-salamu alaykum" },
           { "text": "مع السلامة", "transliteration": "ma'a as-salama" },
           { "text": "صباح الخير", "transliteration": "sabah al-khair" },
-          { "text": "تصبح على خير", "transliteration": "tusbih 'ala khair" }
+          
         ]
       }
     },
@@ -76,7 +77,7 @@
           { "text": "Goodbye (with peace)" },
           { "text": "Good morning" },
           { "text": "Thank you" },
-          { "text": "Please" }
+         
         ]
       }
     },
@@ -105,7 +106,7 @@
           { "text": "أهلا", "transliteration": "ahlan" },
           { "text": "مرحبا", "transliteration": "marhaba" },
           { "text": "السلام عليكم", "transliteration": "as-salamu alaykum" },
-          { "text": "هاي", "transliteration": "hai" }
+          
         ]
       }
     },
@@ -120,7 +121,7 @@
           { "text": "أهلا", "transliteration": "ahlan" },
           { "text": "وداعا", "transliteration": "wadaan" },
           { "text": "شكرا", "transliteration": "shukran" },
-          { "text": "نعم", "transliteration": "naam" }
+         
         ]
       }
     }

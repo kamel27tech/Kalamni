@@ -80,10 +80,11 @@ export type ListeningExercise = {
   type: 'listening';
   order: number;
   data: {
-    audio: string;
     prompt: string;
-    correctAnswer: string;
+    audioUrl: string;
+    correctAnswerId: string;
     options: Array<{
+      id: string;
       text: string;
       transliteration?: string;
     }>;
