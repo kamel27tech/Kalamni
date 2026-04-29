@@ -6,6 +6,7 @@ import Button from '@/components/atoms/Button';
 import HeaderActivity from '@/components/molecules/HeaderActivity';
 import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercise';
 import ListeningExercise from '@/components/exercises/ListeningExercise';
+import MatchingPairsExercise from '@/components/exercises/MatchingPairsExercise';
 import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
 import { Typography } from '@/constants/typography';
@@ -64,6 +65,19 @@ export default function LessonPlayer() {
     setIsCorrect(correct);
   };
 
+  // Called on each pair match — locks only when all pairs are matched.
+  const handleMatchingPairsSelect = (answer: string | string[]) => {
+    setSelectedAnswer(answer);
+    const exercise = currentExercise;
+    if (exercise.type === 'matching-pairs') {
+      const matchedCount = Array.isArray(answer) ? answer.length : 1;
+      if (matchedCount === exercise.data.pairs.length) {
+        setIsLocked(true);
+        setIsCorrect(true);
+      }
+    }
+  };
+
   // Advances to the next exercise (or completes the lesson).
   const handleNext = () => {
     setAnswerHistory((prev) => [...prev, isCorrect!]);
@@ -111,7 +125,20 @@ export default function LessonPlayer() {
       );
     }
 
-    // Placeholder for exercise types not yet implemented (matching-pairs, tap-to-build)
+    if (exercise.type === 'matching-pairs') {
+      return (
+        <MatchingPairsExercise
+          key={exercise.id}
+          data={exercise.data}
+          selectedAnswer={selectedAnswer}
+          isLocked={isLocked}
+          onSelect={handleMatchingPairsSelect}
+          onNext={handleNext}
+        />
+      );
+    }
+
+    // Placeholder for exercise types not yet implemented (tap-to-build)
     return (
       <View style={styles.centeredContent}>
         <Text style={styles.exerciseIndex}>

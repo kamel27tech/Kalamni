@@ -98,6 +98,7 @@ export type MatchingPairsExercise = {
   data: {
     prompt: string;
     pairs: Array<{
+      id: string;
       left: string;
       right: string;
       audio?: string;

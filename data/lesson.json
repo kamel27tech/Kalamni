@@ -88,10 +88,10 @@
       "data": {
         "prompt": "Match the Arabic greetings to their meanings",
         "pairs": [
-          { "left": "مرحبا", "right": "Hello" },
-          { "left": "أهلا", "right": "Hi" },
-          { "left": "وداعا", "right": "Goodbye" },
-          { "left": "مع السلامة", "right": "Go with peace" }
+          { "id": "mp-001", "left": "مرحبا", "right": "Hello" },
+          { "id": "mp-002", "left": "أهلا", "right": "Hi" },
+          { "id": "mp-003", "left": "وداعا", "right": "Goodbye" },
+          { "id": "mp-004", "left": "مع السلامة", "right": "Go with peace" }
         ]
       }
     },

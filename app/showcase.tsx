@@ -17,6 +17,7 @@ import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercis
 import ProgressBar from '@/components/atoms/ProgressBar';
 import AudioPlayer, { AudioPlayerView } from '@/components/molecules/AudioPlayer';
 import ListeningExercise from '@/components/exercises/ListeningExercise';
+import MatchingPairsExercise from '@/components/exercises/MatchingPairsExercise';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
 
@@ -377,6 +378,30 @@ function AnswerOptionToggleDemo() {
       text="الرياض"
       transliteration="ar-Riyadh"
       onPress={() => setSelected((s) => !s)}
+    />
+  );
+}
+
+// ─── Matching Pairs section ───────────────────────────────────────────────────
+
+const MATCHING_PAIRS_DATA = {
+  prompt: 'Match Each Word to its Translation',
+  pairs: [
+    { id: 'p1', left: 'مرحباً', right: 'Hello' },
+    { id: 'p2', left: 'شكراً', right: 'Thank you' },
+    { id: 'p3', left: 'نعم', right: 'Yes' },
+    { id: 'p4', left: 'لا', right: 'No' },
+  ],
+};
+
+function MatchingPairsInteractiveDemo() {
+  const [matched, setMatched] = useState<string[]>([]);
+  return (
+    <MatchingPairsExercise
+      data={MATCHING_PAIRS_DATA}
+      selectedAnswer={matched}
+      isLocked={false}
+      onSelect={(answer) => setMatched(Array.isArray(answer) ? answer : [answer])}
     />
   );
 }
@@ -904,6 +929,48 @@ export default function ShowcaseScreen() {
 
         <Divider />
 
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* MATCHING PAIRS EXERCISE                                           */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Matching Pairs Exercise" />
+
+        <GroupLabel label="1 · Interactive — tap a word, then its translation" />
+        <View style={mpe.container}>
+          <MatchingPairsInteractiveDemo />
+        </View>
+
+        <GroupLabel label="2 · One pair pre-matched" />
+        <View style={mpe.container}>
+          <MatchingPairsExercise
+            data={MATCHING_PAIRS_DATA}
+            selectedAnswer={['p1,p1']}
+            isLocked={false}
+            onSelect={() => {}}
+          />
+        </View>
+
+        <GroupLabel label="3 · All pairs matched" />
+        <View style={mpe.container}>
+          <MatchingPairsExercise
+            data={MATCHING_PAIRS_DATA}
+            selectedAnswer={['p1,p1', 'p2,p2', 'p3,p3', 'p4,p4']}
+            isLocked={false}
+            onSelect={() => {}}
+          />
+        </View>
+
+        <GroupLabel label="4 · Locked — all pairs matched, no interaction" />
+        <View style={mpe.container}>
+          <MatchingPairsExercise
+            data={MATCHING_PAIRS_DATA}
+            selectedAnswer={['p1,p1', 'p2,p2', 'p3,p3', 'p4,p4']}
+            isLocked={true}
+            onSelect={() => {}}
+          />
+        </View>
+
+        <Divider />
+
         <View style={screen.bottomPad} />
       </ScrollView>
     </SafeAreaView>
@@ -1020,6 +1087,17 @@ const mce = StyleSheet.create({
 const le = StyleSheet.create({
   container: {
     height: 500,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+});
+
+const mpe = StyleSheet.create({
+  container: {
+    height: 580,
     marginBottom: 24,
     borderWidth: 1,
     borderColor: Colors.border.default,
