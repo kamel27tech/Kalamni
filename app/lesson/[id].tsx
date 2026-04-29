@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Button from '@/components/atoms/Button';
 import HeaderActivity from '@/components/molecules/HeaderActivity';
-import FeedbackContainer from '@/components/molecules/FeedbackContainer';
 import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercise';
 import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
@@ -95,6 +94,9 @@ export default function LessonPlayer() {
   // ── Exercise renderer — extend this switch for new types ──────────────────
   function renderExercise() {
     const exercise = currentExercise;
+    const feedbackState =
+      selectedAnswer === null ? 'default' : isCorrect ? 'correct' : 'wrong';
+
     if (exercise.type === 'multiple-choice') {
       return (
         <MultipleChoiceExercise
@@ -103,6 +105,8 @@ export default function LessonPlayer() {
           selectedAnswer={selectedAnswer}
           isLocked={isLocked}
           onSelect={handleSelect}
+          feedbackState={feedbackState}
+          onNext={handleNext}
         />
       );
     }
@@ -132,43 +136,20 @@ export default function LessonPlayer() {
         />
       </View>
 
-      {/* Middle — exercise or completion message */}
-      <View style={[styles.middle, status === 'complete' && styles.middleComplete]}>
+      {/* Content — exercise or completion message */}
+      <View style={styles.content}>
         {status === 'complete' ? (
           <View style={styles.centeredContent}>
             <Text style={styles.completeText}>Lesson Complete!</Text>
-          </View>
-        ) : (
-          renderExercise()
-        )}
-      </View>
-
-      {/* Bottom feedback + button area */}
-      <View style={styles.bottomContainer}>
-        <View style={[styles.contentContainer, styles.feedbackCard]}>
-          {status === 'complete' ? (
             <Button
               label="Back to Home"
               variant="primary"
               onPress={() => router.replace('/')}
             />
-          ) : selectedAnswer === null ? (
-            <FeedbackContainer state="default" style={styles.feedbackContent} />
-          ) : isCorrect ? (
-            <FeedbackContainer
-              state="correct"
-              onNext={handleNext}
-              style={styles.feedbackContent}
-            />
-          ) : (
-            <FeedbackContainer
-              state="wrong"
-              correctAnswer={getCorrectAnswer(currentExercise)}
-              onNext={handleNext}
-              style={styles.feedbackContent}
-            />
-          )}
-        </View>
+          </View>
+        ) : (
+          renderExercise()
+        )}
       </View>
     </SafeAreaView>
   );
@@ -185,10 +166,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
   },
-  middle: {
-    flex: 1,
-  },
-  middleComplete: {
+  content: {
     flex: 1,
   },
   centeredContent: {
@@ -213,17 +191,6 @@ const styles = StyleSheet.create({
     color: Colors.text.heading,
     textAlign: 'center',
   },
-  bottomContainer: {
-    paddingHorizontal: Spacing.md,
-    paddingBottom: Spacing.md,
-  },
-  contentContainer: {
-    backgroundColor: Colors.surface.subtle,
-    borderRadius: 16,
-    padding: 20,
-  },
-  feedbackCard: {},
-  feedbackContent: {},
   messageText: {
     ...Typography.english.body.l,
     color: Colors.text.body,

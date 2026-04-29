@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.border.subtle,
     paddingHorizontal: 24,
     paddingVertical: 20,
-  },
+    minHeight: 80,
+    justifyContent: 'center',  },
   textEn: {
     ...Typography.english.title.m,
     color: Colors.text.heading,

@@ -52,7 +52,7 @@
                           { "text": "مرحبا", "transliteration": "marhaba" },
                           { "text": "شكرا", "transliteration": "shukran" },
                           { "text": "وداعا", "transliteration": "wadaan" },
-                          { "text": "نعم", "transliteration": "naam" }
+                      
                         ]
                       }
                     },
@@ -67,7 +67,7 @@
                           { "text": "Hi" },
                           { "text": "Thank you" },
                           { "text": "Sorry" },
-                          { "text": "Yes" }
+                        
                         ]
                       }
                     },
@@ -82,7 +82,7 @@
                           { "text": "مرحبا", "transliteration": "marhaba" },
                           { "text": "وداعا", "transliteration": "wadaan" },
                           { "text": "أهلا", "transliteration": "ahlan" },
-                          { "text": "نعم", "transliteration": "naam" }
+                          
                         ]
                       }
                     },
@@ -97,7 +97,7 @@
                           { "text": "السلام عليكم", "transliteration": "as-salamu alaykum" },
                           { "text": "مع السلامة", "transliteration": "ma'a as-salama" },
                           { "text": "صباح الخير", "transliteration": "sabah al-khair" },
-                          { "text": "تصبح على خير", "transliteration": "tusbih 'ala khair" }
+                          
                         ]
                       }
                     },
@@ -112,7 +112,7 @@
                           { "text": "Goodbye (with peace)" },
                           { "text": "Good morning" },
                           { "text": "Thank you" },
-                          { "text": "Please" }
+                      
                         ]
                       }
                     },
