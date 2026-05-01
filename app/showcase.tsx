@@ -22,6 +22,9 @@ import TapToBuildExercise from '@/components/exercises/TapToBuildExercise';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
 import { ScoreTimingRow } from '@/app/lesson/summary';
+import UnitNode from '@/components/molecules/UnitNode';
+import SectionHeader from '@/components/molecules/SectionHeader';
+import LevelBanner from '@/components/molecules/LevelBanner';
 
 // ─── Shared layout primitives ─────────────────────────────────────────────────
 
@@ -1064,6 +1067,127 @@ export default function ShowcaseScreen() {
         <View style={ls.card}>
           <ScoreTimingRow percentage={90} formattedTime="3:33" />
         </View>
+
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* LEVEL BANNER                                                      */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Level Banner" />
+
+        <GroupLabel label="5% progress — tappable" />
+        <LevelBanner levelTitle="Beginner Level" progress={0.05} onPress={() => {}} />
+
+        <GroupLabel label="60% progress — static (no onPress)" />
+        <LevelBanner levelTitle="Intermediate Level" progress={0.6} />
+
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* SECTION HEADER                                                    */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Section Header" />
+
+        <GroupLabel label="0 / 6 completed" />
+        <SectionHeader title="Greeting and Introduction" completedUnits={0} totalUnits={6} />
+
+        <GroupLabel label="3 / 6 completed" />
+        <SectionHeader title="Numbers and Counting" completedUnits={3} totalUnits={6} />
+
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* UNIT NODE                                                         */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Unit Node" />
+
+        <GroupLabel label="Unit — Open" />
+        <UnitNode
+          variant="open"
+          type="unit"
+          title="Unit 1: Greetings"
+          imageSource={require('@/assets/images/icon.png')}
+          onPress={() => {}}
+        />
+
+        <GroupLabel label="Unit — Completed" />
+        <UnitNode
+          variant="completed"
+          type="unit"
+          title="Unit 1: Greetings"
+          imageSource={require('@/assets/images/icon.png')}
+          onPress={() => {}}
+        />
+
+        <GroupLabel label="Unit — Not Completed" />
+        <UnitNode
+          variant="not_completed"
+          type="unit"
+          title="Unit 2: Numbers"
+          imageSource={require('@/assets/images/icon.png')}
+          onPress={() => {}}
+        />
+
+        <GroupLabel label="Unit — Locked" />
+        <UnitNode
+          variant="locked"
+          type="unit"
+          title="Unit 3: Colors"
+          imageSource={require('@/assets/images/icon.png')}
+        />
+
+        <GroupLabel label="Unit — Plus" />
+        <UnitNode
+          variant="plus"
+          type="unit"
+          title="Unit 4: Family"
+          imageSource={require('@/assets/images/icon.png')}
+          onPress={() => {}}
+        />
+
+        <GroupLabel label="Checkpoint — Open" />
+        <UnitNode
+          variant="open"
+          type="checkpoint"
+          title="Checkpoint"
+          subtitle="Test your Skills"
+          onPress={() => {}}
+        />
+
+        <GroupLabel label="Checkpoint — Completed" />
+        <UnitNode
+          variant="completed"
+          type="checkpoint"
+          title="Checkpoint"
+          subtitle="Test your Skills"
+          onPress={() => {}}
+        />
+
+        <GroupLabel label="Checkpoint — Not Completed" />
+        <UnitNode
+          variant="not_completed"
+          type="checkpoint"
+          title="Checkpoint"
+          subtitle="Test your Skills"
+          onPress={() => {}}
+        />
+
+        <GroupLabel label="Checkpoint — Locked" />
+        <UnitNode
+          variant="locked"
+          type="checkpoint"
+          title="Checkpoint"
+          subtitle="Test your Skills"
+        />
+
+        <GroupLabel label="Checkpoint — Plus" />
+        <UnitNode
+          variant="plus"
+          type="checkpoint"
+          title="Checkpoint"
+          subtitle="Test your Skills"
+          onPress={() => {}}
+        />
 
         <Divider />
 

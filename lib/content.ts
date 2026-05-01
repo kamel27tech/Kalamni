@@ -29,6 +29,12 @@ export function getLevelById(levelId: string): Level | undefined {
 // TOPIC HELPERS
 // ============================================
 
+// Returns all topics under Level 1 (the first level by order), with units and lessons.
+export function getTopics(): Topic[] {
+  const first = getAllLevels()[0];
+  return first ? [...first.topics].sort((a, b) => a.order - b.order) : [];
+}
+
 export function getTopicsByLevel(levelId: string): Topic[] {
   const level = getLevelById(levelId);
   return level ? [...level.topics].sort((a, b) => a.order - b.order) : [];

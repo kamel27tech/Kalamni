@@ -161,6 +161,136 @@
                       }
                     }
                   ]
+                },
+                {
+                  "id": "lesson-greetings-by-time",
+                  "order": 2,
+                  "title": { "en": "Greetings by Time of Day", "ar": "التحيات حسب الوقت" },
+                  "estimatedMinutes": 5,
+                  "requiresPrevious": true,
+                  "exercises": [
+                    {
+                      "id": "ex-gbt-001",
+                      "type": "multiple-choice",
+                      "order": 1,
+                      "data": {
+                        "prompt": "How do you say 'Good morning'?",
+                        "correctAnswer": "صباح الخير",
+                        "options": [
+                          { "text": "صباح الخير", "transliteration": "sabah al-khair" },
+                          { "text": "مساء الخير", "transliteration": "masa' al-khair" },
+                          { "text": "تصبح على خير", "transliteration": "tusbih 'ala khair" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-gbt-002",
+                      "type": "multiple-choice",
+                      "order": 2,
+                      "data": {
+                        "prompt": "What does 'مساء الخير' mean?",
+                        "correctAnswer": "Good evening",
+                        "options": [
+                          { "text": "Good morning" },
+                          { "text": "Good evening" },
+                          { "text": "Good night" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-gbt-003",
+                      "type": "multiple-choice",
+                      "order": 3,
+                      "data": {
+                        "prompt": "Which phrase means 'Good night' (when going to sleep)?",
+                        "correctAnswer": "تصبح على خير",
+                        "options": [
+                          { "text": "صباح الخير", "transliteration": "sabah al-khair" },
+                          { "text": "مساء الخير", "transliteration": "masa' al-khair" },
+                          { "text": "تصبح على خير", "transliteration": "tusbih 'ala khair" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-gbt-004",
+                      "type": "matching-pairs",
+                      "order": 4,
+                      "data": {
+                        "prompt": "Match each greeting to its meaning",
+                        "pairs": [
+                          { "left": "صباح الخير", "right": "Good morning" },
+                          { "left": "مساء الخير", "right": "Good evening" },
+                          { "left": "تصبح على خير", "right": "Good night" },
+                          { "left": "صباح النور", "right": "Morning of light" }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "lesson-goodbye-phrases",
+                  "order": 3,
+                  "title": { "en": "Goodbye Phrases", "ar": "عبارات الوداع" },
+                  "estimatedMinutes": 5,
+                  "requiresPrevious": true,
+                  "exercises": [
+                    {
+                      "id": "ex-gbp-001",
+                      "type": "multiple-choice",
+                      "order": 1,
+                      "data": {
+                        "prompt": "Which phrase is used to say goodbye formally?",
+                        "correctAnswer": "مع السلامة",
+                        "options": [
+                          { "text": "مع السلامة", "transliteration": "ma'a as-salama" },
+                          { "text": "باي", "transliteration": "bye" },
+                          { "text": "أهلا", "transliteration": "ahlan" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-gbp-002",
+                      "type": "multiple-choice",
+                      "order": 2,
+                      "data": {
+                        "prompt": "What does 'إلى اللقاء' mean?",
+                        "correctAnswer": "Until we meet again",
+                        "options": [
+                          { "text": "See you tomorrow" },
+                          { "text": "Until we meet again" },
+                          { "text": "Take care" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-gbp-003",
+                      "type": "multiple-choice",
+                      "order": 3,
+                      "data": {
+                        "prompt": "How do you say 'Take care'?",
+                        "correctAnswer": "اعتنِ بنفسك",
+                        "options": [
+                          { "text": "اعتنِ بنفسك", "transliteration": "i'tani binafsak" },
+                          { "text": "وداعا", "transliteration": "wadaan" },
+                          { "text": "إلى اللقاء", "transliteration": "ila al-liqa'" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-gbp-004",
+                      "type": "matching-pairs",
+                      "order": 4,
+                      "data": {
+                        "prompt": "Match each farewell to its meaning",
+                        "pairs": [
+                          { "left": "مع السلامة", "right": "Go in peace" },
+                          { "left": "وداعا", "right": "Goodbye" },
+                          { "left": "إلى اللقاء", "right": "Until we meet again" },
+                          { "left": "اعتنِ بنفسك", "right": "Take care" }
+                        ]
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -179,6 +309,80 @@
               "icon": "🙏",
               "requiresPrevious": true,
               "lessons": []
+            },
+            {
+              "id": "unit-how-are-you",
+              "order": 4,
+              "title": { "en": "How Are You?", "ar": "كيف حالك؟" },
+              "icon": "😊",
+              "requiresPrevious": true,
+              "lessons": [
+                {
+                  "id": "lesson-how-are-you-basics",
+                  "order": 1,
+                  "title": { "en": "Asking & Answering", "ar": "السؤال والجواب" },
+                  "estimatedMinutes": 5,
+                  "requiresPrevious": false,
+                  "exercises": [
+                    {
+                      "id": "ex-hay-001",
+                      "type": "multiple-choice",
+                      "order": 1,
+                      "data": {
+                        "prompt": "How do you ask 'How are you?' in Arabic?",
+                        "correctAnswer": "كيف حالك؟",
+                        "options": [
+                          { "text": "كيف حالك؟", "transliteration": "kayfa halak?" },
+                          { "text": "ما اسمك؟", "transliteration": "ma ismuk?" },
+                          { "text": "أين أنت؟", "transliteration": "ayna anta?" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-hay-002",
+                      "type": "multiple-choice",
+                      "order": 2,
+                      "data": {
+                        "prompt": "What does 'بخير، شكرا' mean?",
+                        "correctAnswer": "Fine, thank you",
+                        "options": [
+                          { "text": "Fine, thank you" },
+                          { "text": "Not bad" },
+                          { "text": "Very tired" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-hay-003",
+                      "type": "multiple-choice",
+                      "order": 3,
+                      "data": {
+                        "prompt": "Which phrase means 'Not bad'?",
+                        "correctAnswer": "لا بأس",
+                        "options": [
+                          { "text": "بخير", "transliteration": "bikhair" },
+                          { "text": "لا بأس", "transliteration": "la ba's" },
+                          { "text": "تعبان", "transliteration": "ta'ban" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-hay-004",
+                      "type": "matching-pairs",
+                      "order": 4,
+                      "data": {
+                        "prompt": "Match the phrases to their meanings",
+                        "pairs": [
+                          { "left": "كيف حالك؟", "right": "How are you?" },
+                          { "left": "بخير", "right": "Fine" },
+                          { "left": "لا بأس", "right": "Not bad" },
+                          { "left": "تعبان", "right": "Tired" }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
