@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import Button from '@/components/atoms/Button';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import HeaderActivity from '@/components/molecules/HeaderActivity';
 import MultipleChoiceExercise from '@/components/exercises/MultipleChoiceExercise';
 import ListeningExercise from '@/components/exercises/ListeningExercise';
 import MatchingPairsExercise from '@/components/exercises/MatchingPairsExercise';
+import TapToBuildExercise from '@/components/exercises/TapToBuildExercise';
 import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
-import { Typography } from '@/constants/typography';
 import lessonData from '@/data/lesson.json';
 import { Exercise } from '@/types/content';
 
 // Cast the JSON to the typed Exercise array — lesson.json is the authoritative test fixture
+
 const exercises = [...(lessonData.exercises as Exercise[])].sort(
   (a, b) => a.order - b.order,
 );
@@ -28,8 +28,6 @@ function resolveAudio(url: string): string | number {
   return AUDIO_MAP[url] ?? url;
 }
 
-type LessonStatus = 'playing' | 'complete';
-
 // Returns the value to compare against the selected answer for each exercise type.
 function getCorrectAnswer(exercise: Exercise): string {
   if (exercise.type === 'multiple-choice') return exercise.data.correctAnswer;
@@ -41,11 +39,18 @@ function getCorrectAnswer(exercise: Exercise): string {
 
 export default function LessonPlayer() {
   const router = useRouter();
+  const { id: lessonId } = useLocalSearchParams<{ id: string }>();
 
   // ── Lesson-level state ────────────────────────────────────────────────────
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answerHistory, setAnswerHistory] = useState<boolean[]>([]);
-  const [status, setStatus] = useState<LessonStatus>('playing');
+
+  // ── Elapsed time — useRef avoids re-renders on every tick ─────────────────
+  const elapsedRef = useRef(0);
+  useEffect(() => {
+    const id = setInterval(() => { elapsedRef.current += 1; }, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   // ── Exercise-level controlled state (reset on every advance) ──────────────
   const [selectedAnswer, setSelectedAnswer] = useState<string | string[] | null>(null);
@@ -53,7 +58,7 @@ export default function LessonPlayer() {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const currentExercise = exercises[currentIndex];
-  const progress = status === 'complete' ? 1 : currentIndex / exercises.length;
+  const progress = currentIndex / exercises.length;
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -78,16 +83,45 @@ export default function LessonPlayer() {
     }
   };
 
-  // Advances to the next exercise (or completes the lesson).
+  // Called as the user taps words — updates order without locking.
+  const handleTapToBuildSelect = (answer: string | string[]) => {
+    setSelectedAnswer(answer);
+  };
+
+  // Called when the user taps Check — locks and evaluates order.
+  const handleTapToBuildCheck = () => {
+    const exercise = currentExercise;
+    if (exercise.type !== 'tap-to-build') return;
+    const words = exercise.data.wordBank.map((text, i) => ({ id: `w-${i}`, text }));
+    const ids = Array.isArray(selectedAnswer) ? selectedAnswer : [];
+    const selectedTexts = ids.map((id) => words.find((w) => w.id === id)?.text ?? '');
+    const correct =
+      selectedTexts.length === exercise.data.correctAnswer.length &&
+      selectedTexts.every((text, i) => text === exercise.data.correctAnswer[i]);
+    setIsLocked(true);
+    setIsCorrect(correct);
+  };
+
+  // Advances to the next exercise, or navigates to summary on completion.
   const handleNext = () => {
-    setAnswerHistory((prev) => [...prev, isCorrect!]);
+    const wasCorrect = isCorrect!;
+    setAnswerHistory((prev) => [...prev, wasCorrect]);
     setSelectedAnswer(null);
     setIsLocked(false);
     setIsCorrect(null);
     if (currentIndex < exercises.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setStatus('complete');
+      const finalCorrect = answerHistory.filter(Boolean).length + (wasCorrect ? 1 : 0);
+      router.replace({
+        pathname: '/lesson/summary',
+        params: {
+          correct: String(finalCorrect),
+          total: String(exercises.length),
+          lessonId: lessonId ?? '',
+          elapsed: String(elapsedRef.current),
+        },
+      });
     }
   };
 
@@ -138,16 +172,25 @@ export default function LessonPlayer() {
       );
     }
 
-    // Placeholder for exercise types not yet implemented (tap-to-build)
-    return (
-      <View style={styles.centeredContent}>
-        <Text style={styles.exerciseIndex}>
-          Exercise {currentIndex + 1} of {exercises.length}
-        </Text>
-        <Text style={styles.exerciseType}>Type: {exercise.type}</Text>
-        <Button label="Skip" variant="secondary" onPress={handleNext} />
-      </View>
-    );
+    if (exercise.type === 'tap-to-build') {
+      const words = exercise.data.wordBank.map((text, i) => ({ id: `w-${i}`, text }));
+      const correctOrder = exercise.data.correctAnswer.map(
+        (text) => words.find((w) => w.text === text)?.id ?? text,
+      );
+      return (
+        <TapToBuildExercise
+          key={exercise.id}
+          data={{ prompt: exercise.data.prompt, words, correctOrder }}
+          selectedAnswer={selectedAnswer}
+          isLocked={isLocked}
+          onSelect={handleTapToBuildSelect}
+          onCheck={handleTapToBuildCheck}
+          onNext={handleNext}
+        />
+      );
+    }
+
+    return null;
   }
 
   // ── Render ────────────────────────────────────────────────────────────────
@@ -167,18 +210,7 @@ export default function LessonPlayer() {
 
       {/* Content */}
       <View style={styles.content}>
-        {status === 'complete' ? (
-          <View style={styles.centeredContent}>
-            <Text style={styles.completeText}>Lesson Complete!</Text>
-            <Button
-              label="Back to Home"
-              variant="primary"
-              onPress={() => router.replace('/')}
-            />
-          </View>
-        ) : (
-          renderExercise()
-        )}
+        {renderExercise()}
       </View>
     </SafeAreaView>
   );
@@ -197,27 +229,5 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-  },
-  centeredContent: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: Spacing.lg,
-    gap: Spacing.sm,
-  },
-  exerciseIndex: {
-    ...Typography.english.body.l,
-    color: Colors.text.body,
-    textAlign: 'center',
-  },
-  exerciseType: {
-    ...Typography.english.body.m,
-    color: Colors.text.caption,
-    textAlign: 'center',
-  },
-  completeText: {
-    ...Typography.english.heading.h2,
-    color: Colors.text.heading,
-    textAlign: 'center',
   },
 });

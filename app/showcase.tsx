@@ -18,8 +18,10 @@ import ProgressBar from '@/components/atoms/ProgressBar';
 import AudioPlayer, { AudioPlayerView } from '@/components/molecules/AudioPlayer';
 import ListeningExercise from '@/components/exercises/ListeningExercise';
 import MatchingPairsExercise from '@/components/exercises/MatchingPairsExercise';
+import TapToBuildExercise from '@/components/exercises/TapToBuildExercise';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
+import { ScoreTimingRow } from '@/app/lesson/summary';
 
 // ─── Shared layout primitives ─────────────────────────────────────────────────
 
@@ -378,6 +380,36 @@ function AnswerOptionToggleDemo() {
       text="الرياض"
       transliteration="ar-Riyadh"
       onPress={() => setSelected((s) => !s)}
+    />
+  );
+}
+
+// ─── Tap To Build section ─────────────────────────────────────────────────────
+
+const TAP_BUILD_DATA = {
+  prompt: 'Re-order The Following Sentence',
+  words: [
+    { id: 'w1', text: 'أنا' },
+    { id: 'w2', text: 'أتعلم' },
+    { id: 'w3', text: 'اللغة' },
+    { id: 'w4', text: 'العربية' },
+    { id: 'w5', text: 'كل' },
+    { id: 'w6', text: 'يوم' },
+  ],
+  correctOrder: ['w1', 'w2', 'w3', 'w4', 'w5', 'w6'],
+};
+
+function TapToBuildInteractiveDemo() {
+  const [selected, setSelected] = useState<string[]>([]);
+  const [locked, setLocked] = useState(false);
+  return (
+    <TapToBuildExercise
+      data={TAP_BUILD_DATA}
+      selectedAnswer={selected}
+      isLocked={locked}
+      onSelect={(answer) => setSelected(Array.isArray(answer) ? answer : [answer])}
+      onCheck={() => setLocked(true)}
+      onNext={() => { setSelected([]); setLocked(false); }}
     />
   );
 }
@@ -971,6 +1003,70 @@ export default function ShowcaseScreen() {
 
         <Divider />
 
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* TAP TO BUILD EXERCISE                                             */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Tap To Build Exercise" />
+
+        <GroupLabel label="1 · Interactive — tap words to build the sentence" />
+        <View style={ttbe.container}>
+          <TapToBuildInteractiveDemo />
+        </View>
+
+        <GroupLabel label="2 · Partial selection — 3 of 6 words placed" />
+        <View style={ttbe.container}>
+          <TapToBuildExercise
+            data={TAP_BUILD_DATA}
+            selectedAnswer={['w1', 'w2', 'w3']}
+            isLocked={false}
+            onSelect={() => {}}
+          />
+        </View>
+
+        <GroupLabel label="3 · Completed — all words placed, ready to check" />
+        <View style={ttbe.container}>
+          <TapToBuildExercise
+            data={TAP_BUILD_DATA}
+            selectedAnswer={['w1', 'w2', 'w3', 'w4', 'w5', 'w6']}
+            isLocked={false}
+            onSelect={() => {}}
+          />
+        </View>
+
+        <GroupLabel label="4 · Locked + wrong — words out of order" />
+        <View style={ttbe.container}>
+          <TapToBuildExercise
+            data={TAP_BUILD_DATA}
+            selectedAnswer={['w2', 'w1', 'w4', 'w3', 'w5', 'w6']}
+            isLocked={true}
+            onSelect={() => {}}
+          />
+        </View>
+
+        <Divider />
+
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* LESSON SUMMARY                                                    */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Lesson Summary" />
+
+        <GroupLabel label="Low · 3/10 · 0:45" />
+        <View style={ls.card}>
+          <ScoreTimingRow percentage={30} formattedTime="0:45" />
+        </View>
+
+        <GroupLabel label="Intermediate · 5/10 · 2:10" />
+        <View style={ls.card}>
+          <ScoreTimingRow percentage={50} formattedTime="2:10" />
+        </View>
+
+        <GroupLabel label="Advanced · 9/10 · 3:33" />
+        <View style={ls.card}>
+          <ScoreTimingRow percentage={90} formattedTime="3:33" />
+        </View>
+
+        <Divider />
+
         <View style={screen.bottomPad} />
       </ScrollView>
     </SafeAreaView>
@@ -1106,6 +1202,17 @@ const mpe = StyleSheet.create({
   },
 });
 
+const ttbe = StyleSheet.create({
+  container: {
+    height: 520,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+});
+
 const apInteractive = StyleSheet.create({
   preview: {
     marginBottom: 24,
@@ -1139,5 +1246,11 @@ const btn = StyleSheet.create({
   },
   fill: {
     flex: 1,
+  },
+});
+
+const ls = StyleSheet.create({
+  card: {
+    marginBottom: 24,
   },
 });

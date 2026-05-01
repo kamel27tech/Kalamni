@@ -53,17 +53,13 @@
     },
     {
       "id": "ex-004",
-      "type": "multiple-choice",
+      "type": "tap-to-build",
       "order": 4,
       "data": {
-        "prompt": "How do you say 'Peace be upon you'?",
-        "correctAnswer": "السلام عليكم",
-        "options": [
-          { "text": "السلام عليكم", "transliteration": "as-salamu alaykum" },
-          { "text": "مع السلامة", "transliteration": "ma'a as-salama" },
-          { "text": "صباح الخير", "transliteration": "sabah al-khair" },
-          
-        ]
+        "prompt": "Re-order The Following Sentence",
+        "wordBank": ["حالك", "اليوم", "كيف"],
+        "correctAnswer": ["كيف", "حالك", "اليوم"],
+        "translation": "How are you today"
       }
     },
     {
@@ -112,17 +108,13 @@
     },
     {
       "id": "ex-008",
-      "type": "multiple-choice",
+      "type": "tap-to-build",
       "order": 8,
       "data": {
-        "prompt": "How do you say 'Hi' in Arabic?",
-        "correctAnswer": "أهلا",
-        "options": [
-          { "text": "أهلا", "transliteration": "ahlan" },
-          { "text": "وداعا", "transliteration": "wadaan" },
-          { "text": "شكرا", "transliteration": "shukran" },
-         
-        ]
+        "prompt": "Re-order The Following Sentence",
+        "wordBank": ["صديقي", "الخير", "يا", "صباح"],
+        "correctAnswer": ["صباح", "الخير", "يا", "صديقي"],
+        "translation": "Good morning, my friend"
       }
     }
   ]
