@@ -8,15 +8,10 @@ import ListeningExercise from '@/components/exercises/ListeningExercise';
 import MatchingPairsExercise from '@/components/exercises/MatchingPairsExercise';
 import TapToBuildExercise from '@/components/exercises/TapToBuildExercise';
 import { Colors } from '@/constants/colors';
+import { useProgressStore } from '@/lib/stores/progress';
 import { Spacing } from '@/constants/spacing';
-import lessonData from '@/data/lesson.json';
+import { getExercisesByLesson } from '@/lib/content';
 import { Exercise } from '@/types/content';
-
-// Cast the JSON to the typed Exercise array — lesson.json is the authoritative test fixture
-
-const exercises = [...(lessonData.exercises as Exercise[])].sort(
-  (a, b) => a.order - b.order,
-);
 
 // Maps audio paths from lesson.json to bundled local assets.
 // expo-av cannot resolve bare relative string paths — require() gives the module ID.
@@ -41,6 +36,12 @@ export default function LessonPlayer() {
   const router = useRouter();
   const { id: lessonId } = useLocalSearchParams<{ id: string }>();
 
+  // ── Exercises — loaded per lesson from course.json ───────────────────────
+  const exercises = React.useMemo(
+    () => getExercisesByLesson(lessonId ?? ''),
+    [lessonId],
+  );
+
   // ── Lesson-level state ────────────────────────────────────────────────────
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answerHistory, setAnswerHistory] = useState<boolean[]>([]);
@@ -56,6 +57,8 @@ export default function LessonPlayer() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | string[] | null>(null);
   const [isLocked, setIsLocked] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  const markComplete = useProgressStore((s) => s.markComplete);
 
   const currentExercise = exercises[currentIndex];
   const progress = currentIndex / exercises.length;
@@ -103,7 +106,7 @@ export default function LessonPlayer() {
   };
 
   // Advances to the next exercise, or navigates to summary on completion.
-  const handleNext = () => {
+  const handleNext = async () => {
     const wasCorrect = isCorrect!;
     setAnswerHistory((prev) => [...prev, wasCorrect]);
     setSelectedAnswer(null);
@@ -113,6 +116,7 @@ export default function LessonPlayer() {
       setCurrentIndex(currentIndex + 1);
     } else {
       const finalCorrect = answerHistory.filter(Boolean).length + (wasCorrect ? 1 : 0);
+      await markComplete(lessonId ?? '');
       router.replace({
         pathname: '/lesson/summary',
         params: {

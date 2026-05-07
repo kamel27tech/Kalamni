@@ -15,10 +15,13 @@ import type { Lesson } from '@/types/content';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+export type LessonVariant = 'completed' | 'active' | 'locked';
+
 export type UnitBottomSheetProps = {
   isVisible: boolean;
   onClose: () => void;
   lessons: Lesson[];
+  lessonVariants: Record<string, LessonVariant>;
   onLessonPress: (lessonId: string) => void;
 };
 
@@ -38,6 +41,7 @@ export default function UnitBottomSheet({
   isVisible,
   onClose,
   lessons,
+  lessonVariants,
   onLessonPress,
 }: UnitBottomSheetProps) {
   // Keep the Modal mounted during the exit animation
@@ -135,24 +139,29 @@ export default function UnitBottomSheet({
             contentContainerStyle={styles.listContent}
             bounces={false}
           >
-            {lessons.map((lesson, index) => (
-              <React.Fragment key={lesson.id}>
-                {index > 0 && <View style={styles.divider} />}
-                <UnitNode
-                  variant={index === 0 ? 'open' : 'locked'}
-                  type="unit"
-                  title={lesson.title.en}
-                  onPress={
-                    index === 0
-                      ? () => {
-                          onClose();
-                          onLessonPress(lesson.id);
-                        }
-                      : undefined
-                  }
-                />
-              </React.Fragment>
-            ))}
+            {lessons.map((lesson, index) => {
+              const lessonVariant = lessonVariants[lesson.id] ?? 'locked';
+              const unitNodeVariant =
+                lessonVariant === 'active' ? 'open' : lessonVariant;
+              return (
+                <React.Fragment key={lesson.id}>
+                  {index > 0 && <View style={styles.divider} />}
+                  <UnitNode
+                    variant={unitNodeVariant}
+                    type="unit"
+                    title={lesson.title.en}
+                    onPress={
+                      lessonVariant !== 'locked'
+                        ? () => {
+                            onClose();
+                            onLessonPress(lesson.id);
+                          }
+                        : undefined
+                    }
+                  />
+                </React.Fragment>
+              );
+            })}
           </ScrollView>
         </Animated.View>
       </View>

@@ -268,3 +268,34 @@ export function getUnitProgress(
     percent: total === 0 ? 0 : Math.round((completed / total) * 100),
   };
 }
+
+export function getTotalLessonsInLevel(levelId: string): number {
+  const level = getLevelById(levelId);
+  if (!level) return 0;
+  let total = 0;
+  for (const topic of level.topics) {
+    for (const unit of topic.units) {
+      total += unit.lessons.length;
+    }
+  }
+  return total;
+}
+
+export function getLevelProgress(
+  levelId: string,
+  completedLessonIds: string[]
+): number {
+  const total = getTotalLessonsInLevel(levelId);
+  if (total === 0) return 0;
+  const level = getLevelById(levelId);
+  if (!level) return 0;
+  let completed = 0;
+  for (const topic of level.topics) {
+    for (const unit of topic.units) {
+      for (const lesson of unit.lessons) {
+        if (completedLessonIds.includes(lesson.id)) completed += 1;
+      }
+    }
+  }
+  return completed / total;
+}

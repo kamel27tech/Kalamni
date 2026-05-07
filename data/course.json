@@ -42,7 +42,7 @@
                   "requiresPrevious": false,
                   "exercises": [
                     {
-                      "id": "ex-001",
+                      "id": "ex-bh-001",
                       "type": "multiple-choice",
                       "order": 1,
                       "data": {
@@ -51,13 +51,12 @@
                         "options": [
                           { "text": "مرحبا", "transliteration": "marhaba" },
                           { "text": "شكرا", "transliteration": "shukran" },
-                          { "text": "وداعا", "transliteration": "wadaan" },
-                      
+                          { "text": "وداعا", "transliteration": "wadaan" }
                         ]
                       }
                     },
                     {
-                      "id": "ex-002",
+                      "id": "ex-bh-002",
                       "type": "multiple-choice",
                       "order": 2,
                       "data": {
@@ -66,97 +65,46 @@
                         "options": [
                           { "text": "Hi" },
                           { "text": "Thank you" },
-                          { "text": "Sorry" },
-                        
+                          { "text": "Sorry" }
                         ]
                       }
                     },
                     {
-                      "id": "ex-003",
+                      "id": "ex-bh-003",
                       "type": "multiple-choice",
                       "order": 3,
-                      "data": {
-                        "prompt": "Which means 'Goodbye'?",
-                        "correctAnswer": "وداعا",
-                        "options": [
-                          { "text": "مرحبا", "transliteration": "marhaba" },
-                          { "text": "وداعا", "transliteration": "wadaan" },
-                          { "text": "أهلا", "transliteration": "ahlan" },
-                          
-                        ]
-                      }
-                    },
-                    {
-                      "id": "ex-004",
-                      "type": "multiple-choice",
-                      "order": 4,
                       "data": {
                         "prompt": "How do you say 'Peace be upon you'?",
                         "correctAnswer": "السلام عليكم",
                         "options": [
                           { "text": "السلام عليكم", "transliteration": "as-salamu alaykum" },
                           { "text": "مع السلامة", "transliteration": "ma'a as-salama" },
-                          { "text": "صباح الخير", "transliteration": "sabah al-khair" },
-                          
+                          { "text": "صباح الخير", "transliteration": "sabah al-khair" }
                         ]
                       }
                     },
                     {
-                      "id": "ex-005",
-                      "type": "multiple-choice",
-                      "order": 5,
+                      "id": "ex-bh-004",
+                      "type": "tap-to-build",
+                      "order": 4,
                       "data": {
-                        "prompt": "What does 'مع السلامة' mean?",
-                        "correctAnswer": "Goodbye (with peace)",
-                        "options": [
-                          { "text": "Goodbye (with peace)" },
-                          { "text": "Good morning" },
-                          { "text": "Thank you" },
-                      
-                        ]
+                        "prompt": "Re-order The Following Sentence",
+                        "wordBank": ["يا", "مرحبا", "صديقي"],
+                        "correctAnswer": ["مرحبا", "يا", "صديقي"],
+                        "translation": "Hello, my friend"
                       }
                     },
                     {
-                      "id": "ex-006",
+                      "id": "ex-bh-005",
                       "type": "matching-pairs",
-                      "order": 6,
+                      "order": 5,
                       "data": {
                         "prompt": "Match the Arabic greetings to their meanings",
                         "pairs": [
-                          { "left": "مرحبا", "right": "Hello" },
-                          { "left": "أهلا", "right": "Hi" },
-                          { "left": "وداعا", "right": "Goodbye" },
-                          { "left": "مع السلامة", "right": "Go with peace" }
-                        ]
-                      }
-                    },
-                    {
-                      "id": "ex-007",
-                      "type": "multiple-choice",
-                      "order": 7,
-                      "data": {
-                        "prompt": "Which is the formal way to greet someone?",
-                        "correctAnswer": "السلام عليكم",
-                        "options": [
-                          { "text": "أهلا", "transliteration": "ahlan" },
-                          { "text": "مرحبا", "transliteration": "marhaba" },
-                          { "text": "السلام عليكم", "transliteration": "as-salamu alaykum" },
-                          { "text": "هاي", "transliteration": "hai" }
-                        ]
-                      }
-                    },
-                    {
-                      "id": "ex-008",
-                      "type": "multiple-choice",
-                      "order": 8,
-                      "data": {
-                        "prompt": "How do you say 'Hi' in Arabic?",
-                        "correctAnswer": "أهلا",
-                        "options": [
-                          { "text": "أهلا", "transliteration": "ahlan" },
-                          { "text": "وداعا", "transliteration": "wadaan" },
-                          { "text": "شكرا", "transliteration": "shukran" },
-                          { "text": "نعم", "transliteration": "naam" }
+                          { "id": "mp-bh-1", "left": "مرحبا", "right": "Hello" },
+                          { "id": "mp-bh-2", "left": "أهلا", "right": "Hi" },
+                          { "id": "mp-bh-3", "left": "وداعا", "right": "Goodbye" },
+                          { "id": "mp-bh-4", "left": "مع السلامة", "right": "Go with peace" }
                         ]
                       }
                     }
@@ -213,15 +161,26 @@
                     },
                     {
                       "id": "ex-gbt-004",
-                      "type": "matching-pairs",
+                      "type": "tap-to-build",
                       "order": 4,
+                      "data": {
+                        "prompt": "Re-order The Following Sentence",
+                        "wordBank": ["الخير", "يا", "صديقي", "صباح"],
+                        "correctAnswer": ["صباح", "الخير", "يا", "صديقي"],
+                        "translation": "Good morning, my friend"
+                      }
+                    },
+                    {
+                      "id": "ex-gbt-005",
+                      "type": "matching-pairs",
+                      "order": 5,
                       "data": {
                         "prompt": "Match each greeting to its meaning",
                         "pairs": [
-                          { "left": "صباح الخير", "right": "Good morning" },
-                          { "left": "مساء الخير", "right": "Good evening" },
-                          { "left": "تصبح على خير", "right": "Good night" },
-                          { "left": "صباح النور", "right": "Morning of light" }
+                          { "id": "mp-gbt-1", "left": "صباح الخير", "right": "Good morning" },
+                          { "id": "mp-gbt-2", "left": "مساء الخير", "right": "Good evening" },
+                          { "id": "mp-gbt-3", "left": "تصبح على خير", "right": "Good night" },
+                          { "id": "mp-gbt-4", "left": "صباح النور", "right": "Morning of light" }
                         ]
                       }
                     }
@@ -278,15 +237,26 @@
                     },
                     {
                       "id": "ex-gbp-004",
-                      "type": "matching-pairs",
+                      "type": "tap-to-build",
                       "order": 4,
+                      "data": {
+                        "prompt": "Re-order The Following Sentence",
+                        "wordBank": ["اللقاء", "إلى", "صديقي", "يا"],
+                        "correctAnswer": ["إلى", "اللقاء", "يا", "صديقي"],
+                        "translation": "Until we meet again, my friend"
+                      }
+                    },
+                    {
+                      "id": "ex-gbp-005",
+                      "type": "matching-pairs",
+                      "order": 5,
                       "data": {
                         "prompt": "Match each farewell to its meaning",
                         "pairs": [
-                          { "left": "مع السلامة", "right": "Go in peace" },
-                          { "left": "وداعا", "right": "Goodbye" },
-                          { "left": "إلى اللقاء", "right": "Until we meet again" },
-                          { "left": "اعتنِ بنفسك", "right": "Take care" }
+                          { "id": "mp-gbp-1", "left": "مع السلامة", "right": "Go in peace" },
+                          { "id": "mp-gbp-2", "left": "وداعا", "right": "Goodbye" },
+                          { "id": "mp-gbp-3", "left": "إلى اللقاء", "right": "Until we meet again" },
+                          { "id": "mp-gbp-4", "left": "اعتنِ بنفسك", "right": "Take care" }
                         ]
                       }
                     }
@@ -300,7 +270,160 @@
               "title": { "en": "Introductions", "ar": "التعارف" },
               "icon": "🤝",
               "requiresPrevious": true,
-              "lessons": []
+              "lessons": [
+                {
+                  "id": "lesson-my-name",
+                  "order": 1,
+                  "title": { "en": "My Name Is…", "ar": "اسمي…" },
+                  "estimatedMinutes": 5,
+                  "requiresPrevious": false,
+                  "exercises": [
+                    {
+                      "id": "ex-mn-001",
+                      "type": "multiple-choice",
+                      "order": 1,
+                      "data": {
+                        "prompt": "How do you say 'My name is…'?",
+                        "correctAnswer": "اسمي",
+                        "options": [
+                          { "text": "اسمي", "transliteration": "ismi" },
+                          { "text": "عمري", "transliteration": "'umri" },
+                          { "text": "بيتي", "transliteration": "baiti" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-mn-002",
+                      "type": "multiple-choice",
+                      "order": 2,
+                      "data": {
+                        "prompt": "What does 'ما اسمك؟' mean?",
+                        "correctAnswer": "What is your name?",
+                        "options": [
+                          { "text": "How are you?" },
+                          { "text": "What is your name?" },
+                          { "text": "Where are you from?" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-mn-003",
+                      "type": "multiple-choice",
+                      "order": 3,
+                      "data": {
+                        "prompt": "How do you say 'Nice to meet you'?",
+                        "correctAnswer": "تشرفت",
+                        "options": [
+                          { "text": "تشرفت", "transliteration": "tasharraftu" },
+                          { "text": "شكرا", "transliteration": "shukran" },
+                          { "text": "أهلا", "transliteration": "ahlan" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-mn-004",
+                      "type": "tap-to-build",
+                      "order": 4,
+                      "data": {
+                        "prompt": "Re-order The Following Sentence",
+                        "wordBank": ["محمد", "اسمي", "أنا"],
+                        "correctAnswer": ["أنا", "اسمي", "محمد"],
+                        "translation": "I, my name is Mohammed"
+                      }
+                    },
+                    {
+                      "id": "ex-mn-005",
+                      "type": "matching-pairs",
+                      "order": 5,
+                      "data": {
+                        "prompt": "Match the phrases to their meanings",
+                        "pairs": [
+                          { "id": "mp-mn-1", "left": "اسمي", "right": "My name is" },
+                          { "id": "mp-mn-2", "left": "ما اسمك؟", "right": "What is your name?" },
+                          { "id": "mp-mn-3", "left": "تشرفت", "right": "Nice to meet you" },
+                          { "id": "mp-mn-4", "left": "أنا", "right": "I am" }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "lesson-where-are-you-from",
+                  "order": 2,
+                  "title": { "en": "Where Are You From?", "ar": "من أين أنت؟" },
+                  "estimatedMinutes": 5,
+                  "requiresPrevious": true,
+                  "exercises": [
+                    {
+                      "id": "ex-wayf-001",
+                      "type": "multiple-choice",
+                      "order": 1,
+                      "data": {
+                        "prompt": "How do you ask 'Where are you from?'",
+                        "correctAnswer": "من أين أنت؟",
+                        "options": [
+                          { "text": "من أين أنت؟", "transliteration": "min ayna anta?" },
+                          { "text": "كيف حالك؟", "transliteration": "kayfa halak?" },
+                          { "text": "ما اسمك؟", "transliteration": "ma ismuk?" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-wayf-002",
+                      "type": "multiple-choice",
+                      "order": 2,
+                      "data": {
+                        "prompt": "What does 'أنا من مصر' mean?",
+                        "correctAnswer": "I am from Egypt",
+                        "options": [
+                          { "text": "I am from Egypt" },
+                          { "text": "I am from Morocco" },
+                          { "text": "I am from Jordan" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-wayf-003",
+                      "type": "multiple-choice",
+                      "order": 3,
+                      "data": {
+                        "prompt": "How do you say 'I am from…'?",
+                        "correctAnswer": "أنا من",
+                        "options": [
+                          { "text": "أنا من", "transliteration": "ana min" },
+                          { "text": "أنا في", "transliteration": "ana fi" },
+                          { "text": "أنا عند", "transliteration": "ana 'ind" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-wayf-004",
+                      "type": "tap-to-build",
+                      "order": 4,
+                      "data": {
+                        "prompt": "Re-order The Following Sentence",
+                        "wordBank": ["مصر", "أنا", "من"],
+                        "correctAnswer": ["أنا", "من", "مصر"],
+                        "translation": "I am from Egypt"
+                      }
+                    },
+                    {
+                      "id": "ex-wayf-005",
+                      "type": "matching-pairs",
+                      "order": 5,
+                      "data": {
+                        "prompt": "Match the phrases to their meanings",
+                        "pairs": [
+                          { "id": "mp-wayf-1", "left": "من أين أنت؟", "right": "Where are you from?" },
+                          { "id": "mp-wayf-2", "left": "أنا من", "right": "I am from" },
+                          { "id": "mp-wayf-3", "left": "مصر", "right": "Egypt" },
+                          { "id": "mp-wayf-4", "left": "أهلا وسهلا", "right": "Welcome" }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             {
               "id": "unit-polite-phrases",
@@ -308,7 +431,160 @@
               "title": { "en": "Polite Phrases", "ar": "عبارات المجاملة" },
               "icon": "🙏",
               "requiresPrevious": true,
-              "lessons": []
+              "lessons": [
+                {
+                  "id": "lesson-thank-you-sorry",
+                  "order": 1,
+                  "title": { "en": "Thank You & Sorry", "ar": "شكرا وآسف" },
+                  "estimatedMinutes": 5,
+                  "requiresPrevious": false,
+                  "exercises": [
+                    {
+                      "id": "ex-tys-001",
+                      "type": "multiple-choice",
+                      "order": 1,
+                      "data": {
+                        "prompt": "How do you say 'Thank you'?",
+                        "correctAnswer": "شكرا",
+                        "options": [
+                          { "text": "شكرا", "transliteration": "shukran" },
+                          { "text": "عفوا", "transliteration": "'afwan" },
+                          { "text": "آسف", "transliteration": "asif" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-tys-002",
+                      "type": "multiple-choice",
+                      "order": 2,
+                      "data": {
+                        "prompt": "What does 'عفوا' mean?",
+                        "correctAnswer": "You're welcome",
+                        "options": [
+                          { "text": "Sorry" },
+                          { "text": "You're welcome" },
+                          { "text": "Please" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-tys-003",
+                      "type": "multiple-choice",
+                      "order": 3,
+                      "data": {
+                        "prompt": "How do you say 'I'm sorry'?",
+                        "correctAnswer": "آسف",
+                        "options": [
+                          { "text": "شكرا", "transliteration": "shukran" },
+                          { "text": "آسف", "transliteration": "asif" },
+                          { "text": "من فضلك", "transliteration": "min fadlak" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-tys-004",
+                      "type": "tap-to-build",
+                      "order": 4,
+                      "data": {
+                        "prompt": "Re-order The Following Sentence",
+                        "wordBank": ["لك", "جزيلا", "شكرا"],
+                        "correctAnswer": ["شكرا", "جزيلا", "لك"],
+                        "translation": "Thank you very much"
+                      }
+                    },
+                    {
+                      "id": "ex-tys-005",
+                      "type": "matching-pairs",
+                      "order": 5,
+                      "data": {
+                        "prompt": "Match the phrases to their meanings",
+                        "pairs": [
+                          { "id": "mp-tys-1", "left": "شكرا", "right": "Thank you" },
+                          { "id": "mp-tys-2", "left": "عفوا", "right": "You're welcome" },
+                          { "id": "mp-tys-3", "left": "آسف", "right": "Sorry" },
+                          { "id": "mp-tys-4", "left": "من فضلك", "right": "Please" }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "lesson-please-requests",
+                  "order": 2,
+                  "title": { "en": "Please & Requests", "ar": "من فضلك والطلبات" },
+                  "estimatedMinutes": 5,
+                  "requiresPrevious": true,
+                  "exercises": [
+                    {
+                      "id": "ex-pr-001",
+                      "type": "multiple-choice",
+                      "order": 1,
+                      "data": {
+                        "prompt": "How do you say 'Please'?",
+                        "correctAnswer": "من فضلك",
+                        "options": [
+                          { "text": "من فضلك", "transliteration": "min fadlak" },
+                          { "text": "شكرا", "transliteration": "shukran" },
+                          { "text": "تفضل", "transliteration": "tafaddal" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-pr-002",
+                      "type": "multiple-choice",
+                      "order": 2,
+                      "data": {
+                        "prompt": "What does 'تفضل' mean?",
+                        "correctAnswer": "Here you go / Go ahead",
+                        "options": [
+                          { "text": "Here you go / Go ahead" },
+                          { "text": "Thank you" },
+                          { "text": "I'm sorry" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-pr-003",
+                      "type": "multiple-choice",
+                      "order": 3,
+                      "data": {
+                        "prompt": "How do you say 'Excuse me' to get attention?",
+                        "correctAnswer": "لو سمحت",
+                        "options": [
+                          { "text": "آسف", "transliteration": "asif" },
+                          { "text": "لو سمحت", "transliteration": "law samaht" },
+                          { "text": "تفضل", "transliteration": "tafaddal" }
+                        ]
+                      }
+                    },
+                    {
+                      "id": "ex-pr-004",
+                      "type": "tap-to-build",
+                      "order": 4,
+                      "data": {
+                        "prompt": "Re-order The Following Sentence",
+                        "wordBank": ["ساعدني", "فضلك", "من"],
+                        "correctAnswer": ["من", "فضلك", "ساعدني"],
+                        "translation": "Please help me"
+                      }
+                    },
+                    {
+                      "id": "ex-pr-005",
+                      "type": "matching-pairs",
+                      "order": 5,
+                      "data": {
+                        "prompt": "Match the polite phrases to their meanings",
+                        "pairs": [
+                          { "id": "mp-pr-1", "left": "من فضلك", "right": "Please" },
+                          { "id": "mp-pr-2", "left": "تفضل", "right": "Go ahead" },
+                          { "id": "mp-pr-3", "left": "لو سمحت", "right": "Excuse me" },
+                          { "id": "mp-pr-4", "left": "بكل سرور", "right": "With pleasure" }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             {
               "id": "unit-how-are-you",
@@ -368,15 +644,26 @@
                     },
                     {
                       "id": "ex-hay-004",
-                      "type": "matching-pairs",
+                      "type": "tap-to-build",
                       "order": 4,
+                      "data": {
+                        "prompt": "Re-order The Following Sentence",
+                        "wordBank": ["اليوم", "حالك", "كيف"],
+                        "correctAnswer": ["كيف", "حالك", "اليوم"],
+                        "translation": "How are you today?"
+                      }
+                    },
+                    {
+                      "id": "ex-hay-005",
+                      "type": "matching-pairs",
+                      "order": 5,
                       "data": {
                         "prompt": "Match the phrases to their meanings",
                         "pairs": [
-                          { "left": "كيف حالك؟", "right": "How are you?" },
-                          { "left": "بخير", "right": "Fine" },
-                          { "left": "لا بأس", "right": "Not bad" },
-                          { "left": "تعبان", "right": "Tired" }
+                          { "id": "mp-hay-1", "left": "كيف حالك؟", "right": "How are you?" },
+                          { "id": "mp-hay-2", "left": "بخير", "right": "Fine" },
+                          { "id": "mp-hay-3", "left": "لا بأس", "right": "Not bad" },
+                          { "id": "mp-hay-4", "left": "تعبان", "right": "Tired" }
                         ]
                       }
                     }

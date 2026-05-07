@@ -15,8 +15,9 @@ import LevelBanner from '@/components/molecules/LevelBanner';
 import SectionHeader from '@/components/molecules/SectionHeader';
 import UnitNode, { UnitNodeVariant } from '@/components/molecules/UnitNode';
 import UnitBottomSheet from '@/components/organisms/UnitBottomSheet';
-import { getTopics, getAllLevels } from '@/lib/content';
-import type { Unit } from '@/types/content';
+import { getTopics, getAllLevels, getLevelProgress } from '@/lib/content';
+import { useProgressStore } from '@/lib/stores/progress';
+import type { Unit, Lesson } from '@/types/content';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,40 +33,92 @@ type TopicSection = {
   rows: UnitRow[];
 };
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function buildSections(): TopicSection[] {
-  const topics = getTopics();
-  let isFirstUnit = true;
-
-  return topics.map((topic) => {
-    const units = [...topic.units].sort((a, b) => a.order - b.order);
-
-    const rows: UnitRow[] = units.map((unit) => {
-      const variant: UnitNodeVariant = isFirstUnit ? 'open' : 'locked';
-      if (isFirstUnit) isFirstUnit = false;
-      return { unit, variant };
-    });
-
-    return {
-      id: topic.id,
-      title: topic.title.en,
-      totalUnits: units.length,
-      rows,
-    };
-  });
+function isUnitUnlocked(unit: Unit, allUnits: Unit[], completedLessons: string[]): boolean {
+  if (!unit.requiresPrevious) return true;
+  const sorted = [...allUnits].sort((a, b) => a.order - b.order);
+  const idx = sorted.findIndex((u) => u.id === unit.id);
+  if (idx <= 0) return true;
+  const prevUnit = sorted[idx - 1];
+  return prevUnit.lessons.every((l) => completedLessons.includes(l.id));
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function HomeScreen() {
   const router = useRouter();
-  const sections = useMemo(buildSections, []);
+  const completedLessons = useProgressStore((s) => s.completedLessons);
+  const isCompleted = useProgressStore((s) => s.isCompleted);
+
+  function getLessonVariant(
+    lessonId: string,
+    lessonIndex: number,
+    unitLessons: Lesson[],
+    unitIsUnlocked: boolean,
+  ): 'completed' | 'active' | 'locked' {
+    if (!unitIsUnlocked) return 'locked';
+    if (isCompleted(lessonId)) return 'completed';
+    const firstNonCompleted = unitLessons.findIndex((l) => !isCompleted(l.id));
+    if (lessonIndex === firstNonCompleted) return 'active';
+    return 'locked';
+  }
+
+  const sections = useMemo((): TopicSection[] => {
+    const topics = getTopics();
+    return topics.map((topic) => {
+      const units = [...topic.units].sort((a, b) => a.order - b.order);
+
+      const rows: UnitRow[] = units.map((unit) => {
+        const unitIsUnlocked = isUnitUnlocked(unit, units, completedLessons);
+
+        let variant: UnitNodeVariant;
+        if (!unitIsUnlocked) {
+          variant = 'locked';
+        } else if (unit.lessons.length > 0 && unit.lessons.every((l) => completedLessons.includes(l.id))) {
+          variant = 'completed';
+        } else {
+          const hasActiveLesson = unit.lessons.some((lesson, i) =>
+            getLessonVariant(lesson.id, i, unit.lessons, unitIsUnlocked) === 'active',
+          );
+          variant = hasActiveLesson ? 'open' : 'locked';
+        }
+
+        return { unit, variant };
+      });
+
+      return {
+        id: topic.id,
+        title: topic.title.en,
+        totalUnits: units.length,
+        rows,
+      };
+    });
+  }, [completedLessons, isCompleted]);
 
   const level = useMemo(() => getAllLevels()[0], []);
   const levelTitle = level ? `${level.title.en} Level` : 'Beginner Level';
 
+  const levelProgress = getLevelProgress(level?.id ?? 'level-beginner', completedLessons);
+  console.log('[progress-debug] completedLessons:', completedLessons, 'levelProgress:', levelProgress, 'levelId:', level?.id);
+
   const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
+
+  const lessonVariants = useMemo((): Record<string, 'completed' | 'active' | 'locked'> => {
+    if (!selectedUnit) return {};
+    const topics = getTopics();
+    let unitIsUnlocked = true;
+    for (const topic of topics) {
+      if (topic.units.some((u) => u.id === selectedUnit.id)) {
+        unitIsUnlocked = isUnitUnlocked(selectedUnit, topic.units, completedLessons);
+        break;
+      }
+    }
+    const lessons = [...selectedUnit.lessons].sort((a, b) => a.order - b.order);
+    return Object.fromEntries(
+      lessons.map((lesson, i) => [lesson.id, getLessonVariant(lesson.id, i, lessons, unitIsUnlocked)]),
+    );
+  }, [selectedUnit, completedLessons, isCompleted]);
 
   function handleUnitPress(unit: Unit) {
     setSelectedUnit(unit);
@@ -90,7 +143,7 @@ export default function HomeScreen() {
       >
         {/* Level banner */}
         <View style={styles.bannerWrapper}>
-          <LevelBanner levelTitle={levelTitle} progress={0.05} />
+          <LevelBanner levelTitle={levelTitle} progress={levelProgress} />
         </View>
 
         {/* Topic sections */}
@@ -110,7 +163,7 @@ export default function HomeScreen() {
                     type="unit"
                     title={unit.title.en}
                     onPress={
-                      variant === 'open'
+                      variant !== 'locked'
                         ? () => handleUnitPress(unit)
                         : undefined
                     }
@@ -129,6 +182,7 @@ export default function HomeScreen() {
         isVisible={selectedUnit != null}
         onClose={() => setSelectedUnit(null)}
         lessons={selectedUnit?.lessons ?? []}
+        lessonVariants={lessonVariants}
         onLessonPress={handleLessonPress}
       />
     </SafeAreaView>

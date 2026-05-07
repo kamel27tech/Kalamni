@@ -25,6 +25,7 @@ import { ScoreTimingRow } from '@/app/lesson/summary';
 import UnitNode from '@/components/molecules/UnitNode';
 import SectionHeader from '@/components/molecules/SectionHeader';
 import LevelBanner from '@/components/molecules/LevelBanner';
+import InputField from '@/components/atoms/InputField';
 
 // ─── Shared layout primitives ─────────────────────────────────────────────────
 
@@ -438,6 +439,63 @@ function MatchingPairsInteractiveDemo() {
       isLocked={false}
       onSelect={(answer) => setMatched(Array.isArray(answer) ? answer : [answer])}
     />
+  );
+}
+
+// ─── InputField section ───────────────────────────────────────────────────────
+
+function InputFieldDemo() {
+  const [defaultVal, setDefaultVal] = useState('');
+  const [filledVal, setFilledVal] = useState('Kamel@gmail.com');
+  const [focusedVal, setFocusedVal] = useState('');
+  const [iconVal, setIconVal] = useState('');
+
+  return (
+    <>
+      <GroupLabel label="1 · Default — empty, no border" />
+      <View style={inf.field}>
+        <InputField
+          placeholder="Place holder"
+          value={defaultVal}
+          onChangeText={setDefaultVal}
+          keyboardType="email-address"
+          accessibilityLabel="Default input field"
+        />
+      </View>
+
+      <GroupLabel label="2 · Filled — has value, no border" />
+      <View style={inf.field}>
+        <InputField
+          placeholder="Place holder"
+          value={filledVal}
+          onChangeText={setFilledVal}
+          keyboardType="email-address"
+          accessibilityLabel="Filled input field"
+        />
+      </View>
+
+      <GroupLabel label="3 · Focused — tap to see secondary (yellow) border" />
+      <View style={inf.field}>
+        <InputField
+          placeholder="Place holder"
+          value={focusedVal}
+          onChangeText={setFocusedVal}
+          keyboardType="email-address"
+          accessibilityLabel="Focus demo input field"
+        />
+      </View>
+
+      <GroupLabel label="4 · Right icon — close icon via Icon atom" />
+      <View style={inf.field}>
+        <InputField
+          placeholder="Place holder"
+          value={iconVal}
+          onChangeText={setIconVal}
+          accessibilityLabel="Input with right icon"
+          rightIcon={<Icon name="close" size={24} color={Colors.icon.subtle} />}
+        />
+      </View>
+    </>
   );
 }
 
@@ -1191,6 +1249,14 @@ export default function ShowcaseScreen() {
 
         <Divider />
 
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* INPUT FIELD                                                       */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="Input Field" />
+        <InputFieldDemo />
+
+        <Divider />
+
         <View style={screen.bottomPad} />
       </ScrollView>
     </SafeAreaView>
@@ -1375,6 +1441,12 @@ const btn = StyleSheet.create({
 
 const ls = StyleSheet.create({
   card: {
+    marginBottom: 24,
+  },
+});
+
+const inf = StyleSheet.create({
+  field: {
     marginBottom: 24,
   },
 });
