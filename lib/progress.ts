@@ -37,3 +37,29 @@ export async function markLessonComplete(lessonId: string): Promise<string[]> {
 export function isLessonCompleted(lessonId: string, completedLessons: string[]): boolean {
   return completedLessons.includes(lessonId);
 }
+
+export async function syncLessonToSupabase(lessonId: string, userId: string): Promise<void> {
+  try {
+    const { supabase } = await import('@/lib/supabase');
+    await supabase
+      .from('lesson_progress')
+      .upsert({ user_id: userId, lesson_id: lessonId }, { onConflict: 'user_id,lesson_id' });
+  } catch (e) {
+    console.error('syncLessonToSupabase error:', e);
+  }
+}
+
+export async function fetchCompletedLessonsFromSupabase(userId: string): Promise<string[]> {
+  try {
+    const { supabase } = await import('@/lib/supabase');
+    const { data, error } = await supabase
+      .from('lesson_progress')
+      .select('lesson_id')
+      .eq('user_id', userId);
+    if (error) throw error;
+    return (data ?? []).map((row: { lesson_id: string }) => row.lesson_id);
+  } catch (e) {
+    console.error('fetchCompletedLessonsFromSupabase error:', e);
+    return [];
+  }
+}

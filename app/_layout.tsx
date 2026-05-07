@@ -38,8 +38,9 @@ export default function RootLayout() {
   }, [fontsLoaded, authChecked]);
 
   useEffect(() => {
+    useProgressStore.getState().setUserId(user?.id ?? null);
     useProgressStore.getState().hydrate();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const done = () => setAuthChecked(true);
