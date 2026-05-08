@@ -1,3 +1,4 @@
+import { UnitImages } from "@/assets/images/units";
 import AppHeader from "@/components/molecules/AppHeader";
 import LevelBanner from "@/components/molecules/LevelBanner";
 import SectionHeader from "@/components/molecules/SectionHeader";
@@ -14,6 +15,7 @@ import {
 } from "@/lib/content";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { useProgressStore } from "@/lib/stores/progress";
+import type { ImageSourcePropType } from "react-native";
 import type { Lesson, Topic, Unit } from "@/types/content";
 import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
@@ -26,6 +28,7 @@ type UnitRow = {
   unit: Unit;
   variant: UnitNodeVariant;
   progress: number;
+  imageSource?: ImageSourcePropType;
 };
 
 type TopicSection = {
@@ -95,6 +98,7 @@ export default function HomeScreen() {
       const units = [...topic.units].sort((a, b) => a.order - b.order);
       const topicIsUnlocked = isTopicUnlocked(topic, topics, completedLessons);
 
+      const allImages = Object.values(UnitImages);
       const rows: UnitRow[] = units.map((unit) => {
         const unitIsUnlocked =
           topicIsUnlocked && isUnitUnlocked(unit, units, completedLessons);
@@ -120,7 +124,12 @@ export default function HomeScreen() {
           variant = "open";
         }
 
-        return { unit, variant, progress };
+        const imageSource =
+          unit.image != null
+            ? UnitImages[unit.id]
+            : allImages[Math.floor(Math.random() * allImages.length)];
+
+        return { unit, variant, progress, imageSource };
       });
 
       return {
@@ -205,7 +214,7 @@ export default function HomeScreen() {
               totalUnits={section.totalUnits}
             />
             <View style={styles.unitsContainer}>
-              {section.rows.map(({ unit, variant, progress }, index) => (
+              {section.rows.map(({ unit, variant, progress, imageSource }, index) => (
                 <React.Fragment key={unit.id}>
                   {index > 0 && (
                     <View
@@ -221,6 +230,7 @@ export default function HomeScreen() {
                     type="unit"
                     title={unit.title.en}
                     progress={progress}
+                    imageSource={imageSource}
                     onPress={
                       variant !== "locked" && unit.lessons.length > 0
                         ? () => handleUnitPress(unit)

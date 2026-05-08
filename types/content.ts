@@ -40,6 +40,7 @@ export type Unit = {
   order: number;
   title: LocalizedText;
   icon: string;
+  image?: string;
   requiresPrevious: boolean;
   lessons: Lesson[];
 };

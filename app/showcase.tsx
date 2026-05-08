@@ -27,6 +27,7 @@ import SectionHeader from '@/components/molecules/SectionHeader';
 import LevelBanner from '@/components/molecules/LevelBanner';
 import InputField from '@/components/atoms/InputField';
 import AppHeader from '@/components/molecules/AppHeader';
+import { UnitImages } from '@/assets/images/units';
 
 // ─── Shared layout primitives ─────────────────────────────────────────────────
 
@@ -1165,7 +1166,7 @@ export default function ShowcaseScreen() {
           variant="open"
           type="unit"
           title="Unit 1: Greetings"
-          imageSource={require('@/assets/images/icon.png')}
+          imageSource={UnitImages['unit-hello-goodbye']}
           onPress={() => {}}
         />
 
@@ -1174,7 +1175,7 @@ export default function ShowcaseScreen() {
           variant="completed"
           type="unit"
           title="Unit 1: Greetings"
-          imageSource={require('@/assets/images/icon.png')}
+          imageSource={UnitImages['unit-hello-goodbye']}
           onPress={() => {}}
         />
 
@@ -1183,7 +1184,7 @@ export default function ShowcaseScreen() {
           variant="not_completed"
           type="unit"
           title="Unit 2: Numbers"
-          imageSource={require('@/assets/images/icon.png')}
+          imageSource={UnitImages['unit-hello-goodbye']}
           progress={0.4}
           onPress={() => {}}
         />
@@ -1193,7 +1194,7 @@ export default function ShowcaseScreen() {
           variant="locked"
           type="unit"
           title="Unit 3: Colors"
-          imageSource={require('@/assets/images/icon.png')}
+          imageSource={UnitImages['unit-hello-goodbye']}
         />
 
         <GroupLabel label="Unit — Plus" />
@@ -1201,7 +1202,7 @@ export default function ShowcaseScreen() {
           variant="plus"
           type="unit"
           title="Unit 4: Family"
-          imageSource={require('@/assets/images/icon.png')}
+          imageSource={UnitImages['unit-hello-goodbye']}
           onPress={() => {}}
         />
 
