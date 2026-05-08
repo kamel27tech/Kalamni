@@ -70,3 +70,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 }));
+
+// Keep the auth store in sync with Supabase session changes (sign-in,
+// sign-out, token refresh) so the progress store always sees the right user.
+supabase.auth.onAuthStateChange((_event, session) => {
+  const u = session?.user;
+  useAuthStore.setState({
+    user: u ? { id: u.id, email: u.email ?? '' } : null,
+  });
+});

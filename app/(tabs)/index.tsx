@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useFocusEffect, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
 import { Spacing } from '@/constants/spacing';
@@ -15,9 +15,9 @@ import LevelBanner from '@/components/molecules/LevelBanner';
 import SectionHeader from '@/components/molecules/SectionHeader';
 import UnitNode, { UnitNodeVariant } from '@/components/molecules/UnitNode';
 import UnitBottomSheet from '@/components/organisms/UnitBottomSheet';
-import { getTopics, getAllLevels, getLevelProgress } from '@/lib/content';
+import { getTopics, getAllLevels, getLevelProgress, isTopicComplete } from '@/lib/content';
 import { useProgressStore } from '@/lib/stores/progress';
-import type { Unit, Lesson } from '@/types/content';
+import type { Unit, Topic, Lesson } from '@/types/content';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -41,7 +41,19 @@ function isUnitUnlocked(unit: Unit, allUnits: Unit[], completedLessons: string[]
   const idx = sorted.findIndex((u) => u.id === unit.id);
   if (idx <= 0) return true;
   const prevUnit = sorted[idx - 1];
+  // An empty previous unit can never be "completed", so progression stops here.
+  // Otherwise [].every(...) would return true and unlock every following unit.
+  if (prevUnit.lessons.length === 0) return false;
   return prevUnit.lessons.every((l) => completedLessons.includes(l.id));
+}
+
+function isTopicUnlocked(topic: Topic, allTopics: Topic[], completedLessons: string[]): boolean {
+  if (!topic.requiresPrevious) return true;
+  const sorted = [...allTopics].sort((a, b) => a.order - b.order);
+  const idx = sorted.findIndex((t) => t.id === topic.id);
+  if (idx <= 0) return true;
+  const prevTopic = sorted[idx - 1];
+  return isTopicComplete(prevTopic.id, completedLessons);
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -50,10 +62,6 @@ export default function HomeScreen() {
   const router = useRouter();
   const completedLessons = useProgressStore((s) => s.completedLessons);
   const isCompleted = useProgressStore((s) => s.isCompleted);
-
-  useFocusEffect(useCallback(() => {
-    useProgressStore.getState().hydrate();
-  }, []));
 
   function getLessonVariant(
     lessonId: string,
@@ -72,20 +80,23 @@ export default function HomeScreen() {
     const topics = getTopics();
     return topics.map((topic) => {
       const units = [...topic.units].sort((a, b) => a.order - b.order);
+      const topicIsUnlocked = isTopicUnlocked(topic, topics, completedLessons);
 
       const rows: UnitRow[] = units.map((unit) => {
-        const unitIsUnlocked = isUnitUnlocked(unit, units, completedLessons);
+        const unitIsUnlocked =
+          topicIsUnlocked && isUnitUnlocked(unit, units, completedLessons);
 
         let variant: UnitNodeVariant;
         if (!unitIsUnlocked) {
           variant = 'locked';
-        } else if (unit.lessons.length > 0 && unit.lessons.every((l) => completedLessons.includes(l.id))) {
+        } else if (unit.lessons.length === 0) {
+          // Unit has no lessons yet (placeholder content). Show as open so users
+          // see it's reachable; the bottom sheet will reflect the empty state.
+          variant = 'open';
+        } else if (unit.lessons.every((l) => completedLessons.includes(l.id))) {
           variant = 'completed';
         } else {
-          const hasActiveLesson = unit.lessons.some((lesson, i) =>
-            getLessonVariant(lesson.id, i, unit.lessons, unitIsUnlocked) === 'active',
-          );
-          variant = hasActiveLesson ? 'open' : 'locked';
+          variant = 'open';
         }
 
         return { unit, variant };
@@ -104,7 +115,6 @@ export default function HomeScreen() {
   const levelTitle = level ? `${level.title.en} Level` : 'Beginner Level';
 
   const levelProgress = getLevelProgress(level?.id ?? 'level-beginner', completedLessons);
-  console.log('[progress-debug] completedLessons:', completedLessons, 'levelProgress:', levelProgress, 'levelId:', level?.id);
 
   const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
 
@@ -114,7 +124,9 @@ export default function HomeScreen() {
     let unitIsUnlocked = true;
     for (const topic of topics) {
       if (topic.units.some((u) => u.id === selectedUnit.id)) {
-        unitIsUnlocked = isUnitUnlocked(selectedUnit, topic.units, completedLessons);
+        unitIsUnlocked =
+          isTopicUnlocked(topic, topics, completedLessons) &&
+          isUnitUnlocked(selectedUnit, topic.units, completedLessons);
         break;
       }
     }
@@ -167,7 +179,7 @@ export default function HomeScreen() {
                     type="unit"
                     title={unit.title.en}
                     onPress={
-                      variant !== 'locked'
+                      variant !== 'locked' && unit.lessons.length > 0
                         ? () => handleUnitPress(unit)
                         : undefined
                     }
