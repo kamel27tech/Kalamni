@@ -6,6 +6,9 @@ import {
   syncLessonToSupabase,
   addPendingSync,
   flushPendingSync,
+  saveCompletedLessons,
+  getPendingSync,
+  migrateAnonymousProgress,
 } from '@/lib/progress';
 
 type ProgressState = {
@@ -31,63 +34,97 @@ function mergeIds(existing: string[], incoming: string[]): string[] {
   return merged;
 }
 
-let hydratePromise: Promise<void> | null = null;
+// Hydrate is keyed per-user: a hydrate for user A can't short-circuit a
+// hydrate for user B, but two concurrent hydrates for the same user dedupe.
+const hydrateInFlight = new Map<string, Promise<void>>();
+const ANON_HYDRATE_KEY = '__anon__';
 
 export const useProgressStore = create<ProgressState>((set, get) => ({
   completedLessons: [],
   isHydrated: false,
   userId: null,
 
+  // Resets state when the user actually changes so the previous user's
+  // progress can't bleed into the next session's UI or sync push.
   setUserId: (id: string | null) => {
-    set({ userId: id });
+    if (get().userId === id) return;
+    set({ userId: id, completedLessons: [], isHydrated: false });
   },
 
-  // Reads local AsyncStorage and (if signed in) Supabase, then merges into the
-  // current store state — never overwrites in-flight local changes. Concurrent
-  // calls share a single in-flight promise.
   hydrate: async () => {
-    if (hydratePromise) return hydratePromise;
-    hydratePromise = (async () => {
+    const userId = get().userId;
+    const key = userId ?? ANON_HYDRATE_KEY;
+    const existing = hydrateInFlight.get(key);
+    if (existing) return existing;
+
+    const startSnapshot = new Set(get().completedLessons);
+
+    const promise = (async () => {
       try {
-        const local = await getCompletedLessons();
-        const userId = get().userId;
-        let remote: string[] = [];
+        let truth: string[];
         if (userId !== null) {
-          remote = await fetchCompletedLessonsFromSupabase(userId);
-          // Push any locally-saved lessons that aren't on the server yet.
+          // Carry over any progress completed while signed-out.
+          await migrateAnonymousProgress(userId);
+          // Retry any prior failed syncs before reading remote, so the
+          // remote we fetch is as up-to-date as we can make it.
+          await flushPendingSync(userId);
+          const remote = await fetchCompletedLessonsFromSupabase(userId);
+          const local = await getCompletedLessons(userId);
           const remoteSet = new Set(remote);
           const toPush = local.filter((id) => !remoteSet.has(id));
           for (const id of toPush) {
             await syncLessonToSupabase(id, userId);
           }
-          // Retry any prior failed syncs.
-          await flushPendingSync(userId);
+          // Server is the source of truth; pending = writes still queued
+          // for retry that we want to keep visible until they land.
+          const pending = await getPendingSync(userId);
+          truth = mergeIds(mergeIds(remote, toPush), pending);
+          // Replace local cache with truth so a remote-side delete on
+          // another device is reflected on the next hydrate (instead of
+          // being re-pushed from a stale local cache).
+          await saveCompletedLessons(userId, truth);
+        } else {
+          truth = await getCompletedLessons(null);
         }
-        set((state) => ({
-          completedLessons: mergeIds(state.completedLessons, mergeIds(local, remote)),
-          isHydrated: true,
-        }));
+
+        // If the user changed mid-hydrate, drop our result — the new
+        // user's hydrate will write the correct state.
+        if (get().userId !== userId) return;
+
+        set((state) => {
+          // Preserve any markCompletes that landed since this hydrate began.
+          const inFlight = state.completedLessons.filter((id) => !startSnapshot.has(id));
+          return {
+            completedLessons: mergeIds(truth, inFlight),
+            isHydrated: true,
+          };
+        });
       } finally {
-        hydratePromise = null;
+        hydrateInFlight.delete(key);
       }
     })();
-    return hydratePromise;
+
+    hydrateInFlight.set(key, promise);
+    return promise;
   },
 
   // Saves the lesson locally and to Supabase. Uses a functional update so
   // concurrent hydrations can't wipe the new lesson.
   markComplete: async (lessonId: string) => {
-    await markLessonComplete(lessonId);
+    const userId = get().userId;
+    await markLessonComplete(userId, lessonId);
     set((state) => ({
       completedLessons: mergeIds(state.completedLessons, [lessonId]),
     }));
-    const userId = get().userId;
     if (userId !== null) {
-      // Fire-and-forget; failures land in the pending-sync queue and retry on next hydrate.
+      // Fire-and-forget: failures are caught inside syncLessonToSupabase,
+      // which adds the lesson to the per-user pending-sync queue so the
+      // next hydrate retries it.
       syncLessonToSupabase(lessonId, userId);
     } else {
-      // Not signed in yet — queue for later sync.
-      addPendingSync(lessonId);
+      // Not signed in yet — queue under the anonymous scope so it migrates
+      // to the user's scope on first sign-in.
+      addPendingSync(null, lessonId);
     }
   },
 

@@ -1,29 +1,31 @@
-import React, { useMemo, useState } from 'react';
+import AppHeader from "@/components/molecules/AppHeader";
+import LevelBanner from "@/components/molecules/LevelBanner";
+import SectionHeader from "@/components/molecules/SectionHeader";
+import UnitNode, { UnitNodeVariant } from "@/components/molecules/UnitNode";
+import UnitBottomSheet from "@/components/organisms/UnitBottomSheet";
+import { Colors } from "@/constants/colors";
+import { Spacing } from "@/constants/spacing";
+import { Typography } from "@/constants/typography";
 import {
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { Colors } from '@/constants/colors';
-import { Typography } from '@/constants/typography';
-import { Spacing } from '@/constants/spacing';
-import AppHeader from '@/components/molecules/AppHeader';
-import LevelBanner from '@/components/molecules/LevelBanner';
-import SectionHeader from '@/components/molecules/SectionHeader';
-import UnitNode, { UnitNodeVariant } from '@/components/molecules/UnitNode';
-import UnitBottomSheet from '@/components/organisms/UnitBottomSheet';
-import { getTopics, getAllLevels, getLevelProgress, isTopicComplete } from '@/lib/content';
-import { useProgressStore } from '@/lib/stores/progress';
-import { useAuthStore } from '@/lib/stores/authStore';
-import type { Unit, Topic, Lesson } from '@/types/content';
+  getAllLevels,
+  getLevelProgress,
+  getTopics,
+  isTopicComplete,
+} from "@/lib/content";
+import { useAuthStore } from "@/lib/stores/authStore";
+import { useProgressStore } from "@/lib/stores/progress";
+import type { Lesson, Topic, Unit } from "@/types/content";
+import { useRouter } from "expo-router";
+import React, { useMemo, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type UnitRow = {
   unit: Unit;
   variant: UnitNodeVariant;
+  progress: number;
 };
 
 type TopicSection = {
@@ -35,7 +37,11 @@ type TopicSection = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function isUnitUnlocked(unit: Unit, allUnits: Unit[], completedLessons: string[]): boolean {
+function isUnitUnlocked(
+  unit: Unit,
+  allUnits: Unit[],
+  completedLessons: string[],
+): boolean {
   if (!unit.requiresPrevious) return true;
   const sorted = [...allUnits].sort((a, b) => a.order - b.order);
   const idx = sorted.findIndex((u) => u.id === unit.id);
@@ -47,7 +53,11 @@ function isUnitUnlocked(unit: Unit, allUnits: Unit[], completedLessons: string[]
   return prevUnit.lessons.every((l) => completedLessons.includes(l.id));
 }
 
-function isTopicUnlocked(topic: Topic, allTopics: Topic[], completedLessons: string[]): boolean {
+function isTopicUnlocked(
+  topic: Topic,
+  allTopics: Topic[],
+  completedLessons: string[],
+): boolean {
   if (!topic.requiresPrevious) return true;
   const sorted = [...allTopics].sort((a, b) => a.order - b.order);
   const idx = sorted.findIndex((t) => t.id === topic.id);
@@ -62,7 +72,7 @@ export default function HomeScreen() {
   const { top } = useSafeAreaInsets();
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
-  const userName = user?.name ?? user?.email?.split('@')[0] ?? '';
+  const userName = user?.name ?? user?.email?.split("@")[0] ?? "";
   const completedLessons = useProgressStore((s) => s.completedLessons);
   const isCompleted = useProgressStore((s) => s.isCompleted);
 
@@ -71,12 +81,12 @@ export default function HomeScreen() {
     lessonIndex: number,
     unitLessons: Lesson[],
     unitIsUnlocked: boolean,
-  ): 'completed' | 'active' | 'locked' {
-    if (!unitIsUnlocked) return 'locked';
-    if (isCompleted(lessonId)) return 'completed';
+  ): "completed" | "active" | "locked" {
+    if (!unitIsUnlocked) return "locked";
+    if (isCompleted(lessonId)) return "completed";
     const firstNonCompleted = unitLessons.findIndex((l) => !isCompleted(l.id));
-    if (lessonIndex === firstNonCompleted) return 'active';
-    return 'locked';
+    if (lessonIndex === firstNonCompleted) return "active";
+    return "locked";
   }
 
   const sections = useMemo((): TopicSection[] => {
@@ -89,20 +99,28 @@ export default function HomeScreen() {
         const unitIsUnlocked =
           topicIsUnlocked && isUnitUnlocked(unit, units, completedLessons);
 
+        const total = unit.lessons.length;
+        const done = unit.lessons.filter((l) =>
+          completedLessons.includes(l.id),
+        ).length;
+        const progress = total > 0 ? done / total : 0;
+
         let variant: UnitNodeVariant;
         if (!unitIsUnlocked) {
-          variant = 'locked';
-        } else if (unit.lessons.length === 0) {
+          variant = "locked";
+        } else if (total === 0) {
           // Unit has no lessons yet (placeholder content). Show as open so users
           // see it's reachable; the bottom sheet will reflect the empty state.
-          variant = 'open';
-        } else if (unit.lessons.every((l) => completedLessons.includes(l.id))) {
-          variant = 'completed';
+          variant = "open";
+        } else if (done === total) {
+          variant = "completed";
+        } else if (done > 0) {
+          variant = "not_completed";
         } else {
-          variant = 'open';
+          variant = "open";
         }
 
-        return { unit, variant };
+        return { unit, variant, progress };
       });
 
       return {
@@ -115,13 +133,19 @@ export default function HomeScreen() {
   }, [completedLessons, isCompleted]);
 
   const level = useMemo(() => getAllLevels()[0], []);
-  const levelTitle = level ? `${level.title.en} Level` : 'Beginner Level';
+  const levelTitle = level ? `${level.title.en} Level` : "Beginner Level";
 
-  const levelProgress = getLevelProgress(level?.id ?? 'level-beginner', completedLessons);
+  const levelProgress = getLevelProgress(
+    level?.id ?? "level-beginner",
+    completedLessons,
+  );
 
   const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
 
-  const lessonVariants = useMemo((): Record<string, 'completed' | 'active' | 'locked'> => {
+  const lessonVariants = useMemo((): Record<
+    string,
+    "completed" | "active" | "locked"
+  > => {
     if (!selectedUnit) return {};
     const topics = getTopics();
     let unitIsUnlocked = true;
@@ -135,7 +159,10 @@ export default function HomeScreen() {
     }
     const lessons = [...selectedUnit.lessons].sort((a, b) => a.order - b.order);
     return Object.fromEntries(
-      lessons.map((lesson, i) => [lesson.id, getLessonVariant(lesson.id, i, lessons, unitIsUnlocked)]),
+      lessons.map((lesson, i) => [
+        lesson.id,
+        getLessonVariant(lesson.id, i, lessons, unitIsUnlocked),
+      ]),
     );
   }, [selectedUnit, completedLessons, isCompleted]);
 
@@ -178,15 +205,24 @@ export default function HomeScreen() {
               totalUnits={section.totalUnits}
             />
             <View style={styles.unitsContainer}>
-              {section.rows.map(({ unit, variant }, index) => (
+              {section.rows.map(({ unit, variant, progress }, index) => (
                 <React.Fragment key={unit.id}>
-                  {index > 0 && <View style={styles.unitDivider} />}
+                  {index > 0 && (
+                    <View
+                      style={[
+                        styles.unitDivider,
+                        section.rows[index - 1].variant === "completed" &&
+                          styles.unitDividerComplete,
+                      ]}
+                    />
+                  )}
                   <UnitNode
                     variant={variant}
                     type="unit"
                     title={unit.title.en}
+                    progress={progress}
                     onPress={
-                      variant !== 'locked' && unit.lessons.length > 0
+                      variant !== "locked" && unit.lessons.length > 0
                         ? () => handleUnitPress(unit)
                         : undefined
                     }
@@ -223,16 +259,16 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface.subtle,
   },
   headerNoShadow: {
-    shadowColor: 'transparent',
+    shadowColor: "transparent",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0,
     shadowRadius: 0,
     elevation: 0,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.md,
     paddingBottom: Spacing.sm,
@@ -258,8 +294,12 @@ const styles = StyleSheet.create({
   unitDivider: {
     height: 20,
     marginLeft: 55,
-    width: 1,
+    width: 5,
+    borderRadius: 10,
     backgroundColor: Colors.border.default,
+  },
+  unitDividerComplete: {
+    backgroundColor: Colors.success.surface,
   },
   bottomPad: {
     height: Spacing.xxl,

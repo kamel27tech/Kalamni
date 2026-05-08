@@ -1,4 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import UnitNode from "@/components/molecules/UnitNode";
+import { Colors } from "@/constants/colors";
+import { Spacing } from "@/constants/spacing";
+import type { Lesson } from "@/types/content";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Modal,
@@ -7,15 +11,11 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import { Colors } from '@/constants/colors';
-import { Spacing } from '@/constants/spacing';
-import UnitNode from '@/components/molecules/UnitNode';
-import type { Lesson } from '@/types/content';
+} from "react-native";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export type LessonVariant = 'completed' | 'active' | 'locked';
+export type LessonVariant = "completed" | "active" | "locked";
 
 export type UnitBottomSheetProps = {
   isVisible: boolean;
@@ -140,18 +140,26 @@ export default function UnitBottomSheet({
             bounces={false}
           >
             {lessons.map((lesson, index) => {
-              const lessonVariant = lessonVariants[lesson.id] ?? 'locked';
+              const lessonVariant = lessonVariants[lesson.id] ?? "locked";
               const unitNodeVariant =
-                lessonVariant === 'active' ? 'open' : lessonVariant;
+                lessonVariant === "active" ? "open" : lessonVariant;
               return (
                 <React.Fragment key={lesson.id}>
-                  {index > 0 && <View style={styles.divider} />}
+                  {index > 0 && (
+                    <View
+                      style={[
+                        styles.divider,
+                        (lessonVariants[lessons[index - 1].id] ?? "locked") ===
+                          "completed" && styles.dividerComplete,
+                      ]}
+                    />
+                  )}
                   <UnitNode
                     variant={unitNodeVariant}
                     type="unit"
                     title={lesson.title.en}
                     onPress={
-                      lessonVariant !== 'locked'
+                      lessonVariant !== "locked"
                         ? () => {
                             onClose();
                             onLessonPress(lesson.id);
@@ -174,22 +182,22 @@ export default function UnitBottomSheet({
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: "rgba(0,0,0,0.4)",
   },
   sheet: {
     backgroundColor: Colors.surface.default,
     borderTopLeftRadius: SHEET_BORDER_RADIUS,
     borderTopRightRadius: SHEET_BORDER_RADIUS,
-    maxHeight: '80%',
+    maxHeight: "80%",
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.lg,
   },
   handleWrapper: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: Spacing.sm,
   },
   handle: {
@@ -204,7 +212,11 @@ const styles = StyleSheet.create({
   divider: {
     height: 20,
     marginLeft: DIVIDER_OFFSET,
-    width: 1,
+    width: 5,
+    borderRadius: 10,
     backgroundColor: Colors.border.default,
+  },
+  dividerComplete: {
+    backgroundColor: Colors.success.surface,
   },
 });

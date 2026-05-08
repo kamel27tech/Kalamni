@@ -1184,6 +1184,7 @@ export default function ShowcaseScreen() {
           type="unit"
           title="Unit 2: Numbers"
           imageSource={require('@/assets/images/icon.png')}
+          progress={0.4}
           onPress={() => {}}
         />
 
