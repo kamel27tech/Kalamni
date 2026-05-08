@@ -26,6 +26,7 @@ import UnitNode from '@/components/molecules/UnitNode';
 import SectionHeader from '@/components/molecules/SectionHeader';
 import LevelBanner from '@/components/molecules/LevelBanner';
 import InputField from '@/components/atoms/InputField';
+import AppHeader from '@/components/molecules/AppHeader';
 
 // ─── Shared layout primitives ─────────────────────────────────────────────────
 
@@ -1257,6 +1258,53 @@ export default function ShowcaseScreen() {
 
         <Divider />
 
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        {/* APP HEADER                                                        */}
+        {/* ══════════════════════════════════════════════════════════════════ */}
+        <SectionTitle title="App Header" />
+
+        <GroupLabel label="1 · free — isHomePage true" />
+        <View style={ah.frame}>
+          <AppHeader variant="free" isHomePage={true} userName="Kamel Benslimane" notificationCount={5} />
+        </View>
+
+        <GroupLabel label="2 · free — isHomePage false" />
+        <View style={ah.frame}>
+          <AppHeader variant="free" isHomePage={false} userName="Kamel Benslimane" pageTitle="Page Title" notificationCount={5} />
+        </View>
+
+        <GroupLabel label="3 · plus — isHomePage true" />
+        <View style={ah.frame}>
+          <AppHeader variant="plus" isHomePage={true} userName="Kamel Benslimane" daysLeft={6} notificationCount={5} />
+        </View>
+
+        <GroupLabel label="4 · plus — isHomePage false" />
+        <View style={ah.frame}>
+          <AppHeader variant="plus" isHomePage={false} userName="Kamel Benslimane" daysLeft={6} pageTitle="Page Title" notificationCount={5} />
+        </View>
+
+        <GroupLabel label="5 · b2b — isHomePage true" />
+        <View style={ah.frame}>
+          <AppHeader variant="b2b" isHomePage={true} userName="Kamel Benslimane" orgName="Organisation Name" notificationCount={5} />
+        </View>
+
+        <GroupLabel label="6 · b2b — isHomePage false" />
+        <View style={ah.frame}>
+          <AppHeader variant="b2b" isHomePage={false} userName="Kamel Benslimane" orgName="Organisation Name" pageTitle="Page Title" notificationCount={5} />
+        </View>
+
+        <GroupLabel label="7 · guest — isHomePage true" />
+        <View style={ah.frame}>
+          <AppHeader variant="guest" isHomePage={true} />
+        </View>
+
+        <GroupLabel label="8 · guest — isHomePage false" />
+        <View style={ah.frame}>
+          <AppHeader variant="guest" isHomePage={false} pageTitle="Page Title" />
+        </View>
+
+        <Divider />
+
         <View style={screen.bottomPad} />
       </ScrollView>
     </SafeAreaView>
@@ -1447,6 +1495,16 @@ const ls = StyleSheet.create({
 
 const inf = StyleSheet.create({
   field: {
+    marginBottom: 24,
+  },
+});
+
+const ah = StyleSheet.create({
+  frame: {
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    borderRadius: 12,
+    overflow: 'hidden',
     marginBottom: 24,
   },
 });

@@ -1,22 +1,22 @@
 import React, { useMemo, useState } from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
 import { Spacing } from '@/constants/spacing';
-import { Icon } from '@/components/atoms/Icon';
+import AppHeader from '@/components/molecules/AppHeader';
 import LevelBanner from '@/components/molecules/LevelBanner';
 import SectionHeader from '@/components/molecules/SectionHeader';
 import UnitNode, { UnitNodeVariant } from '@/components/molecules/UnitNode';
 import UnitBottomSheet from '@/components/organisms/UnitBottomSheet';
 import { getTopics, getAllLevels, getLevelProgress, isTopicComplete } from '@/lib/content';
 import { useProgressStore } from '@/lib/stores/progress';
+import { useAuthStore } from '@/lib/stores/authStore';
 import type { Unit, Topic, Lesson } from '@/types/content';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -59,7 +59,10 @@ function isTopicUnlocked(topic: Topic, allTopics: Topic[], completedLessons: str
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function HomeScreen() {
+  const { top } = useSafeAreaInsets();
   const router = useRouter();
+  const user = useAuthStore((s) => s.user);
+  const userName = user?.name ?? user?.email?.split('@')[0] ?? '';
   const completedLessons = useProgressStore((s) => s.completedLessons);
   const isCompleted = useProgressStore((s) => s.isCompleted);
 
@@ -146,11 +149,15 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      {/* App header */}
-      <View style={styles.header}>
-        <Text style={styles.appName}>Kalimni</Text>
-        <Icon name="settings" size={24} color={Colors.icon.subtle} />
+    <View style={styles.safe}>
+      {/* App header — white wrapper extends flush to the status bar */}
+      <View style={[styles.headerWrapper, { paddingTop: top }]}>
+        <AppHeader
+          variant="free"
+          isHomePage={true}
+          userName={userName}
+          style={styles.headerNoShadow}
+        />
       </View>
 
       <ScrollView
@@ -201,7 +208,7 @@ export default function HomeScreen() {
         lessonVariants={lessonVariants}
         onLessonPress={handleLessonPress}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -211,6 +218,16 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: Colors.surface.default,
+  },
+  headerWrapper: {
+    backgroundColor: Colors.surface.subtle,
+  },
+  headerNoShadow: {
+    shadowColor: 'transparent',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
   },
   header: {
     flexDirection: 'row',
