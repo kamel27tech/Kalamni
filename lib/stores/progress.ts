@@ -40,11 +40,11 @@ export const useProgressStore = create<ProgressState>((set, get) => ({
 
   markComplete: async (lessonId: string) => {
     const completedLessons = await markLessonComplete(lessonId);
+    set({ completedLessons });
     const userId = get().userId;
     if (userId !== null) {
-      await syncLessonToSupabase(lessonId, userId);
+      syncLessonToSupabase(lessonId, userId);
     }
-    set({ completedLessons });
   },
 
   isCompleted: (lessonId: string) => {

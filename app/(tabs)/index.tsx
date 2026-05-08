@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { Colors } from '@/constants/colors';
 import { Typography } from '@/constants/typography';
 import { Spacing } from '@/constants/spacing';
@@ -50,6 +50,10 @@ export default function HomeScreen() {
   const router = useRouter();
   const completedLessons = useProgressStore((s) => s.completedLessons);
   const isCompleted = useProgressStore((s) => s.isCompleted);
+
+  useFocusEffect(useCallback(() => {
+    useProgressStore.getState().hydrate();
+  }, []));
 
   function getLessonVariant(
     lessonId: string,

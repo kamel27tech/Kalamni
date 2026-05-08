@@ -81,7 +81,7 @@ export default function LessonSummaryScreen() {
           variant="primary"
           size="M"
           rightIcon={<Icon name="arrow_forward" size={24} color={Colors.text.negative} />}
-          onPress={() => router.replace('/')}
+          onPress={() => router.back()}
           style={styles.cta}
         />
       </View>
